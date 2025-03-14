@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WaZuF.Data;
 using Microsoft.AspNetCore.Identity;
 using WaZuF.Models;
+using WaZuF.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,10 @@ var connectionString = builder.Configuration.GetConnectionString("MyConnection")
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<IJopService, JopService>();
+
+
 
 // Identity Configuration
 builder.Services.AddIdentity<Company, IdentityRole>(options =>
