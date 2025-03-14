@@ -15,11 +15,10 @@ namespace WaZuF.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard", "Main");
+            }
             return View();
         }
 
