@@ -1,0 +1,200 @@
+﻿/* Dashboard */
+.dashboard-body {
+    background: var(--secondary-bg);
+}
+
+.dashboard-nav {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 64px;
+}
+
+.sidebar {
+    width: 280px;
+    background: var(--primary-white);
+    padding: 2rem;
+    position: fixed;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    border-right: 1px solid rgba(12, 25, 44, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+}
+
+.user-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--primary-blue);
+    color: var(--primary-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+    .sidebar-nav a {
+        padding: 1rem;
+        color: var(--dark-blue);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+        .sidebar-nav a:hover {
+            background: var(--secondary-bg);
+            color: var(--primary-blue);
+        }
+
+        .sidebar-nav a.active {
+            background: var(--primary-blue);
+            color: var(--primary-white);
+        }
+
+.dashboard-main {
+    flex: 1;
+    padding: 2rem;
+    margin-left: 280px;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .dashboard-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+.date {
+    font-size: 1.1rem;
+    color: rgba(12, 25, 44, 0.7);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-card {
+    background: var(--primary-white);
+    padding: 1.8rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border: 1px solid rgba(3, 90, 233, 0.1);
+}
+
+    .dashboard-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .dashboard-card h3 {
+        color: rgba(12, 25, 44, 0.7);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+.card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-top: 0.8rem;
+}
+
+.recent-activity {
+    background: var(--primary-white);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(3, 90, 233, 0.1);
+}
+
+    .recent-activity h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--dark-blue);
+    }
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem;
+    border-radius: 8px;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(12, 25, 44, 0.1);
+}
+
+    .activity-item:hover {
+        background: var(--secondary-bg);
+    }
+
+.activity-icon {
+    font-size: 1.8rem;
+    margin-right: 1.2rem;
+    background: var(--secondary-bg);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.activity-details h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    color: var(--dark-blue);
+}
+
+.activity-details p {
+    color: rgba(12, 25, 44, 0.7);
+    margin-bottom: 0.3rem;
+}
+
+.activity-time {
+    color: rgba(12, 25, 44, 0.5);
+    font-size: 0.9rem;
+}
