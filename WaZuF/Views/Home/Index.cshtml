@@ -1,1 +1,47 @@
-﻿
+@{
+    ViewData["Title"] = "Professional Match";
+}
+<div class="landing-page">
+    <div class="container">
+        <div class="hero-section">
+            <h1>Find Your Perfect Match in the <span class="highlight">Professional World</span></h1>
+            <p class="subtitle">Connect with top companies and talented professionals using our AI-powered recruitment platform</p>
+        </div>
+
+        <div class="cards-container">
+            <a asp-controller="Home" asp-action="Company" class="card company-card">
+                <div class="icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                        <path d="M9 22v-4h6v4"></path>
+                    </svg>
+                </div>
+                <h2>For Companies</h2>
+                <p>Find the best talent using our advanced AI matching algorithm</p>
+                <div class="cta">
+                    Get Started
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+
+            <a asp-controller="Home" asp-action="Employee" class="card employee-card">
+                <div class="icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h2>For Employees</h2>
+                <p>Let AI help you find the perfect job match based on your skills and preferences</p>
+                <div class="cta">
+                    Coming Soon
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
