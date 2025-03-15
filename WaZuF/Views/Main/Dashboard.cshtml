@@ -1,7 +1,7 @@
 ﻿<link href="~/css/dashboard.css" rel="stylesheet" />
 <body class="dashboard-body">
     <nav class="dashboard-nav">
-        <div class="logo">TechCorp</div>
+        <div class="logo">TalentMatch</div>
         <div class="nav-links">
             <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" type="submit" class="btn btn-danger px-3 py-2 rounded-pill fw-semibold">Logout</button>
@@ -18,7 +18,8 @@
             <nav class="sidebar-nav">
                 <a href="#" class="active">Overview</a>
                 <a href="#">Create New Jop </a>
-                <a href="#">My Jops</a>
+                <a asp-controller="JobRequest" asp-action="Index" class="card company-card">My Jobs</a>
+
             </nav>
         </aside>
 
@@ -30,8 +31,9 @@
 
             <div class="dashboard-grid">
                 <div class="dashboard-card">
+                     
                     <h3>All Jops</h3>
-                    <div class="card-value">12</div>
+                    <div class="card-value">@ViewBag.TotalJobs</div>
                 </div>
                 <div class="dashboard-card">
                     <h3>All Employee</h3>
@@ -39,26 +41,29 @@
                 </div>
             </div>
             <section class="recent-activity">
-                <h2>Recent Activity</h2>
+                <h2>Recent Job Requests</h2>
                 <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">📝</div>
-                        <div class="activity-details">
-                            <h4>Project Update</h4>
-                            <p>New features added to Project Alpha</p>
-                            <span class="activity-time">2 hours ago</span>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">👥</div>
-                        <div class="activity-details">
-                            <h4>New Team Member</h4>
-                            <p>Sarah Johnson joined the team</p>
-                            <span class="activity-time">5 hours ago</span>
-                        </div>
-                    </div>
+                    @if (ViewBag.LatestJobs != null)
+                    {
+                        @foreach (var job in ViewBag.LatestJobs)
+                        {
+                            <div class="activity-item">
+                                <div class="activity-icon">📝</div>
+                                <div class="activity-details">
+                                    <h4>@job.JobTitle</h4>
+                                    <p>@job.Description</p>
+                                    <span class="activity-time"></span>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No recent job requests found.</p>
+                    }
                 </div>
             </section>
+
         </main>
     </div>
 

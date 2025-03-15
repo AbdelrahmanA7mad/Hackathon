@@ -53,6 +53,19 @@ namespace WaZuF.Data
                 .HasForeignKey(q => q.JobRequestId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+
+
+        }
+
+        public class ApplicationDbContext : DbContext
+        {
+            public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+                : base(options)
+            {
+            }
+
+            public DbSet<JobRequest> JobRequests { get; set; }
         }
     }
 }
