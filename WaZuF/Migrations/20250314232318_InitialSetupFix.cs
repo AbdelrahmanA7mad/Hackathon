@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WaZuF.Migrations
 {
     /// <inheritdoc />
-    public partial class First_Database : Migration
+    public partial class InitialSetupFix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -97,8 +97,8 @@ namespace WaZuF.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -142,8 +142,8 @@ namespace WaZuF.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -163,11 +163,11 @@ namespace WaZuF.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     RequiredSkills = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NumberOfQuestions = table.Column<int>(type: "int", nullable: false),
-                    DifficultyLevel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DifficultyLevel = table.Column<int>(type: "int", nullable: false),
                     CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -182,20 +182,22 @@ namespace WaZuF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Candidates",
+                name: "Employees",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    JobRequestId = table.Column<int>(type: "int", nullable: false)
+                    JobRequestId = table.Column<int>(type: "int", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    AttemptDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Candidates", x => x.Id);
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Candidates_JobRequests_JobRequestId",
+                        name: "FK_Employees_JobRequests_JobRequestId",
                         column: x => x.JobRequestId,
                         principalTable: "JobRequests",
                         principalColumn: "Id",
@@ -228,26 +230,26 @@ namespace WaZuF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CandidateAnswers",
+                name: "EmployeeAnswers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CandidateId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
                     SelectedAnswer = table.Column<string>(type: "nvarchar(1)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CandidateAnswers", x => x.Id);
+                    table.PrimaryKey("PK_EmployeeAnswers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CandidateAnswers_Candidates_CandidateId",
-                        column: x => x.CandidateId,
-                        principalTable: "Candidates",
+                        name: "FK_EmployeeAnswers_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CandidateAnswers_Questions_QuestionId",
+                        name: "FK_EmployeeAnswers_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
@@ -294,18 +296,18 @@ namespace WaZuF.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CandidateAnswers_CandidateId",
-                table: "CandidateAnswers",
-                column: "CandidateId");
+                name: "IX_EmployeeAnswers_EmployeeId",
+                table: "EmployeeAnswers",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CandidateAnswers_QuestionId",
-                table: "CandidateAnswers",
+                name: "IX_EmployeeAnswers_QuestionId",
+                table: "EmployeeAnswers",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Candidates_JobRequestId",
-                table: "Candidates",
+                name: "IX_Employees_JobRequestId",
+                table: "Employees",
                 column: "JobRequestId");
 
             migrationBuilder.CreateIndex(
@@ -338,13 +340,13 @@ namespace WaZuF.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CandidateAnswers");
+                name: "EmployeeAnswers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Candidates");
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Questions");

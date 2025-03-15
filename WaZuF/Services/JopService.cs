@@ -9,10 +9,12 @@ namespace WaZuF.Services
     {
         private readonly AppDbContext _db;
         private readonly ILogger<JopService> _logger;
+        private readonly IGeminiService _geminiService;
 
-        public JopService(AppDbContext db, ILogger<JopService> logger)
+        public JopService(AppDbContext db, ILogger<JopService> logger, IGeminiService geminiService)
         {
             _db = db;
+            _geminiService = geminiService;
             _logger = logger;
         }
         public async Task CreateAsync(CreateJopViewModel viewModel, string companyId)
@@ -33,18 +35,23 @@ namespace WaZuF.Services
 
                 _db.JobRequests.Add(jobRequest);
                 await _db.SaveChangesAsync();
+
+                var questions = await _geminiService.GenerateQuizQuestionsAsync(jobRequest);
+
+                foreach (var question in questions)
+                {
+                    // Now using Models.Question with JobRequestId
+
+                    question.JobRequestId = jobRequest.Id;
+                    _db.Questions.Add(question);
+                }
+
+                await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
-            catch (DbUpdateException ex)
+            catch
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Database error creating job");
-                throw new ApplicationException("Database error while saving job", ex);
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error creating job");
                 throw;
             }
         }

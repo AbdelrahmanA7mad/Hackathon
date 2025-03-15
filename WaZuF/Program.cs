@@ -1,8 +1,9 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WaZuF.Data;
 using Microsoft.AspNetCore.Identity;
 using WaZuF.Models;
 using WaZuF.Services;
+using System.Net.Http;  // Add this
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,11 @@ var connectionString = builder.Configuration.GetConnectionString("MyConnection")
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+// ✅ Register HttpClient for GeminiService
+builder.Services.AddHttpClient<IGeminiService, GeminiService>();
+
+// ✅ Keep other service registrations
 builder.Services.AddScoped<IJopService, JopService>();
-
-
 
 // Identity Configuration
 builder.Services.AddIdentity<Company, IdentityRole>(options =>
@@ -36,7 +39,7 @@ builder.Services.AddIdentity<Company, IdentityRole>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Identity/Account/Login";  
+    options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 

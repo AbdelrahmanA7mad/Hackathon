@@ -232,6 +232,9 @@ namespace WaZuF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("AttemptDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -242,6 +245,9 @@ namespace WaZuF.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -258,7 +264,7 @@ namespace WaZuF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("EmployeesId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<int>("QuestionId")
@@ -270,11 +276,11 @@ namespace WaZuF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeesId");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("CandidateAnswers");
+                    b.ToTable("EmployeeAnswers");
                 });
 
             modelBuilder.Entity("WaZuF.Models.JobRequest", b =>
@@ -291,15 +297,16 @@ namespace WaZuF.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("DifficultyLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DifficultyLevel")
+                        .HasColumnType("int");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("NumberOfQuestions")
                         .HasColumnType("int");
@@ -422,8 +429,8 @@ namespace WaZuF.Migrations
             modelBuilder.Entity("WaZuF.Models.EmployeeAnswer", b =>
                 {
                     b.HasOne("WaZuF.Models.Employee", "Employee")
-                        .WithMany("CandidateAnswers")
-                        .HasForeignKey("EmployeesId")
+                        .WithMany("EmployeeAnswers")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -467,7 +474,7 @@ namespace WaZuF.Migrations
 
             modelBuilder.Entity("WaZuF.Models.Employee", b =>
                 {
-                    b.Navigation("CandidateAnswers");
+                    b.Navigation("EmployeeAnswers");
                 });
 
             modelBuilder.Entity("WaZuF.Models.JobRequest", b =>

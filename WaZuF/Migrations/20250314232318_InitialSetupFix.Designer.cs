@@ -12,8 +12,8 @@ using WaZuF.Data;
 namespace WaZuF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250313204716_First_Database")]
-    partial class First_Database
+    [Migration("20250314232318_InitialSetupFix")]
+    partial class InitialSetupFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,12 +105,10 @@ namespace WaZuF.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -147,12 +145,10 @@ namespace WaZuF.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -160,59 +156,6 @@ namespace WaZuF.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("WaZuF.Models.Candidate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("JobRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JobRequestId");
-
-                    b.ToTable("Candidates");
-                });
-
-            modelBuilder.Entity("WaZuF.Models.CandidateAnswer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SelectedAnswer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("CandidateAnswers");
                 });
 
             modelBuilder.Entity("WaZuF.Models.Company", b =>
@@ -284,6 +227,65 @@ namespace WaZuF.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("WaZuF.Models.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AttemptDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("JobRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobRequestId");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("WaZuF.Models.EmployeeAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SelectedAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("EmployeeAnswers");
+                });
+
             modelBuilder.Entity("WaZuF.Models.JobRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -298,15 +300,16 @@ namespace WaZuF.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("DifficultyLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DifficultyLevel")
+                        .HasColumnType("int");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("NumberOfQuestions")
                         .HasColumnType("int");
@@ -415,10 +418,10 @@ namespace WaZuF.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WaZuF.Models.Candidate", b =>
+            modelBuilder.Entity("WaZuF.Models.Employee", b =>
                 {
                     b.HasOne("WaZuF.Models.JobRequest", "JobRequest")
-                        .WithMany("Candidates")
+                        .WithMany("Employees")
                         .HasForeignKey("JobRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -426,11 +429,11 @@ namespace WaZuF.Migrations
                     b.Navigation("JobRequest");
                 });
 
-            modelBuilder.Entity("WaZuF.Models.CandidateAnswer", b =>
+            modelBuilder.Entity("WaZuF.Models.EmployeeAnswer", b =>
                 {
-                    b.HasOne("WaZuF.Models.Candidate", "Candidate")
-                        .WithMany("CandidateAnswers")
-                        .HasForeignKey("CandidateId")
+                    b.HasOne("WaZuF.Models.Employee", "Employee")
+                        .WithMany("EmployeeAnswers")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -440,7 +443,7 @@ namespace WaZuF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Candidate");
+                    b.Navigation("Employee");
 
                     b.Navigation("Question");
                 });
@@ -467,19 +470,19 @@ namespace WaZuF.Migrations
                     b.Navigation("JobRequest");
                 });
 
-            modelBuilder.Entity("WaZuF.Models.Candidate", b =>
-                {
-                    b.Navigation("CandidateAnswers");
-                });
-
             modelBuilder.Entity("WaZuF.Models.Company", b =>
                 {
                     b.Navigation("JobRequests");
                 });
 
+            modelBuilder.Entity("WaZuF.Models.Employee", b =>
+                {
+                    b.Navigation("EmployeeAnswers");
+                });
+
             modelBuilder.Entity("WaZuF.Models.JobRequest", b =>
                 {
-                    b.Navigation("Candidates");
+                    b.Navigation("Employees");
 
                     b.Navigation("Questions");
                 });
