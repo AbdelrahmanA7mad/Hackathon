@@ -1,0 +1,147 @@
+﻿
+<link rel="stylesheet" href="~/css/Details.css">
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Employee Performance Dashboard</h1>
+            <div class="controls">
+                <div class="filter-group">
+                    <label for="sortBy">Sort by:</label>
+                    <select id="sortBy" onchange="sortTable(this.value)">
+                        <option value="score">Score</option>
+                        <option value="average">Average</option>
+                        <option value="timeSpent">Time Spent</option>
+                        <option value="date">Date</option>
+                    </select>
+                </div>
+                <button class="export-btn" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <table id="employeeTable">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Score</th>
+                        <th>Average</th>
+                        <th>Time Spent</th>
+                        <th>Date</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Smith</td>
+                        <td>95</td>
+                        <td>92.5</td>
+                        <td>2h 30m</td>
+                        <td>2024-01-15</td>
+                        <td><a href="mailto:john@example.com"><i class="fas fa-envelope"></i></a></td>
+                    </tr>
+                    <tr>
+                        <td>Sarah Johnson</td>
+                        <td>88</td>
+                        <td>85.7</td>
+                        <td>1h 45m</td>
+                        <td>2024-01-14</td>
+                        <td><a href="mailto:sarah@example.com"><i class="fas fa-envelope"></i></a></td>
+                    </tr>
+                    <tr>
+                        <td>Michael Brown</td>
+                        <td>92</td>
+                        <td>89.3</td>
+                        <td>3h 15m</td>
+                        <td>2024-01-13</td>
+                        <td><a href="mailto:michael@example.com"><i class="fas fa-envelope"></i></a></td>
+                    </tr>
+                    <tr>
+                        <td>Emily Davis</td>
+                        <td>97</td>
+                        <td>94.8</td>
+                        <td>2h 15m</td>
+                        <td>2024-01-12</td>
+                        <td><a href="mailto:emily@example.com"><i class="fas fa-envelope"></i></a></td>
+                    </tr>
+                    <tr>
+                        <td>David Wilson</td>
+                        <td>85</td>
+                        <td>82.4</td>
+                        <td>1h 30m</td>
+                        <td>2024-01-11</td>
+                        <td><a href="mailto:david@example.com"><i class="fas fa-envelope"></i></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <script>
+        function sortTable(column) {
+            const table = document.getElementById('employeeTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            const getColumnIndex = () => {
+                switch(column) {
+                    case 'score': return 1;
+                    case 'average': return 2;
+                    case 'timeSpent': return 3;
+                    case 'date': return 4;
+                    default: return 0;
+                }
+            };
+
+            rows.sort((a, b) => {
+                const columnIndex = getColumnIndex();
+                const aValue = a.cells[columnIndex].textContent;
+                const bValue = b.cells[columnIndex].textContent;
+
+                if (column === 'date') {
+                    return new Date(bValue) - new Date(aValue);
+                } else if (column === 'timeSpent') {
+                    const getMinutes = (time) => {
+                        const [h, m] = time.match(/(\d+)h\s+(\d+)m/).slice(1);
+                        return parseInt(h) * 60 + parseInt(m);
+                    };
+                    return getMinutes(bValue) - getMinutes(aValue);
+                } else {
+                    return parseFloat(bValue) - parseFloat(aValue);
+                }
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function exportData() {
+            const table = document.getElementById('employeeTable');
+            const rows = Array.from(table.querySelectorAll('tr'));
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            rows.forEach(row => {
+                const cells = Array.from(row.cells);
+                const rowData = cells.map(cell => {
+                    // Skip the email icon, use the mailto href instead
+                    if (cell.querySelector('.fa-envelope')) {
+                        return cell.querySelector('a').href.replace('mailto:', '');
+                    }
+                    return cell.textContent;
+                }).join(",");
+                csvContent += rowData + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "employee_data.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
