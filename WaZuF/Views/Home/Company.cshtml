@@ -1,14 +1,25 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@{
     ViewData["Title"] = "Company Portal";
 }
+@inject SignInManager<Company> SignInManager
+@inject UserManager<Company> UserManager
+
 <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 <div class="company-landing">
     <nav class="navbar">
         <a asp-controller="Home" asp-action="Index" class="logo">TalentMatch</a>
         <div class="auth-buttons">
-            <a id="register" asp-area="Identity" class="cta-button" asp-page="/Account/Register">Sign Up</a>
-            <a id="login" asp-area="Identity" class="cta-button" asp-page="/Account/Login">Login</a>
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                <a id="register" asp-area="Identity" class="cta-button" asp-page="/Account/Register">Sign Up</a>
+                <a id="login" asp-area="Identity" class="cta-button" asp-page="/Account/Login">Login</a>
+            }
+            else
+            {
+                <a asp-controller="Main" class="cta-button" asp-action="Dashboard">Dashboard</a>
 
+            }
         </div>
     </nav>
 
