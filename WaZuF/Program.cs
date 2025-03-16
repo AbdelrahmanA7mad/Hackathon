@@ -1,12 +1,25 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WaZuF.Data;
 using Microsoft.AspNetCore.Identity;
 using WaZuF.Models;
+using static WaZuF.Data.AppDbContext;
+using WaZuF.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddControllersWithViews();
+
+
+
+
+
+builder.Services.AddScoped<IJobRequestService, JobRequestService>();
+
+
+
+
+
 
 // Database Configuration
 var connectionString = builder.Configuration.GetConnectionString("MyConnection")
@@ -36,6 +49,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
