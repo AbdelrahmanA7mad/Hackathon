@@ -17,13 +17,13 @@ namespace WaZuF.Areas.Identity.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {
-        private readonly SignInManager<Company> _signInManager;
-        private readonly UserManager<Company> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<LoginWith2faModel> _logger;
 
         public LoginWith2faModel(
-            SignInManager<Company> signInManager,
-            UserManager<Company> userManager,
+            SignInManager<AppUser> signInManager,
+            UserManager<AppUser> userManager,
             ILogger<LoginWith2faModel> logger)
         {
             _signInManager = signInManager;

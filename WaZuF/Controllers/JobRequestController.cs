@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WaZuF.Models;
+
+[Authorize(Policy = "CompanyOnly")]
 
 public class JobRequestController : Controller
 {

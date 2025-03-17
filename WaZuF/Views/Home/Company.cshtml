@@ -1,12 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @{
-    ViewData["Title"] = "Company Portal";
+    ViewData["Title"] = "AppUser Portal";
 }
-@inject SignInManager<Company> SignInManager
-@inject UserManager<Company> UserManager
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-<div class="company-landing">
+<div class="AppUser-landing">
     <nav class="navbar">
         <a asp-controller="Home" asp-action="Index" class="logo">TalentMatch</a>
         <div class="auth-buttons">
@@ -17,7 +17,16 @@
             }
             else
             {
-                <a asp-controller="Main" class="cta-button" asp-action="Dashboard">Dashboard</a>
+                
+                @if (User.HasClaim("UserType", "Company"))
+                {
+                   <a asp-controller="Main" class="cta-button" asp-action="Dashboard">Dashboard</a>
+                }
+                else{
+                    <a asp-controller="Employee" class="cta-button" asp-action="Index">Dashboard</a>
+
+                }
+                
 
             }
         </div>

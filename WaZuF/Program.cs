@@ -18,6 +18,16 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IJobRequestService, JobRequestService>();
 
 
+builder.Services.AddAuthorization(options =>
+
+{
+    options.AddPolicy("PersonOnly", policy =>
+        policy.RequireClaim(" UserType", "Person"));
+
+    options.AddPolicy("CompanyOnly", policy =>
+        policy.RequireClaim("UserType", "Company"));
+});
+
 
 
 
@@ -36,7 +46,7 @@ builder.Services.AddHttpClient<IGeminiService, GeminiService>();
 builder.Services.AddScoped<IJopService, JopService>();
 
 // Identity Configuration
-builder.Services.AddIdentity<Company, IdentityRole>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;

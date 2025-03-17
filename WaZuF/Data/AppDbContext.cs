@@ -4,7 +4,7 @@ using WaZuF.Models;
 
 namespace WaZuF.Data
 {
-    public class AppDbContext : IdentityDbContext<Company>
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -17,9 +17,9 @@ namespace WaZuF.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // JobRequest and Company Relationship
+            // JobRequest and AppUser Relationship
             modelBuilder.Entity<JobRequest>()
-                .HasOne(j => j.Company)
+                .HasOne(j => j.AppUser)
                 .WithMany(c => c.JobRequests)
                 .HasForeignKey(j => j.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);

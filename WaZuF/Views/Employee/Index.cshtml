@@ -1,0 +1,34 @@
+﻿
+<link href="~/css/empcss.css" rel="stylesheet" />
+<div class="container">
+    <header>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link active">Dashboard</a>
+            <a href="quizzes.html" class="nav-link">My Quizzes</a>
+        </nav>
+        <h1>Employee Training Dashboard</h1>
+        <p>Generate personalized training modules based on job descriptions</p>
+    </header>
+
+    <main>
+        <section class="input-section">
+            <h2>Create New Training Module</h2>
+            <div class="input-container">
+                <textarea id="jobDescription"
+                          placeholder="Enter the job description here..."
+                          rows="6"></textarea>
+                <button id="generateBtn" class="primary-btn">Generate Training Module</button>
+            </div>
+        </section>
+
+        <section class="modules-section">
+            <h2>Available Training Modules</h2>
+            <div id="modulesList" class="modules-grid">
+                <!-- Modules will be dynamically added here -->
+            </div>
+        </section>
+    </main>
+</div>
+<script>
+
+</script>

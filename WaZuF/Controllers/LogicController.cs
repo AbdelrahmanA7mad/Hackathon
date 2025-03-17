@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WaZuF.Models;
 using WaZuF.Services;
@@ -6,12 +7,14 @@ using WaZuF.ViewModels;
 
 namespace WaZuF.Controllers
 {
+    [Authorize(Policy = "CompanyOnly")]
+
     public class LogicController : Controller
     {
         private readonly IJopService _jobService;
-        private readonly UserManager<Company> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public LogicController(IJopService jobService, UserManager<Company> userManager)
+        public LogicController(IJopService jobService, UserManager<AppUser> userManager)
         {
             _jobService = jobService;
             _userManager = userManager;
@@ -40,7 +43,7 @@ namespace WaZuF.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null || string.IsNullOrEmpty(user.Id))
             {
-                ModelState.AddModelError("", "User company not found");
+                ModelState.AddModelError("", "User AppUser not found");
                 return View(viewModel);
             }
 

@@ -32,7 +32,7 @@ namespace WaZuF.Models
         public string CompanyId { get; set; } = null!;
 
         [ForeignKey("CompanyId")]
-        public Company Company { get; set; } = null!;
+        public AppUser AppUser { get; set; } = null!;
 
         public List<Question> Questions { get; set; } = new();
         public List<Employee> Employees { get; set; } = new();
