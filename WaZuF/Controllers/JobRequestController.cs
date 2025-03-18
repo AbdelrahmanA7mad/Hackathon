@@ -22,4 +22,19 @@ public class JobRequestController : Controller
         var jobRequests = await _jobRequestService.GetJobRequestsByCompanyIdAsync(user.Id);
         return View(jobRequests);
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        var result = await _jobRequestService.DeleteJobRequestAsync(id, user.Id);
+        if (!result) return NotFound(); // إذا لم يتم العثور على الوظيفة أو لا تمتلك الصلاحية
+
+        return RedirectToAction(nameof(Index));
+    }
+
 }
+

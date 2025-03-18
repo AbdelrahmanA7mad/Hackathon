@@ -70,5 +70,15 @@ namespace WaZuF.Services
                                  .Take(count)
                                  .ToListAsync();
         }
+        public async Task<bool> DeleteJobRequestAsync(int jobId, string companyId)
+        {
+            var job = await _context.JobRequests.FirstOrDefaultAsync(j => j.Id == jobId && j.CompanyId == companyId);
+            if (job == null) return false;
+
+            _context.JobRequests.Remove(job);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }
