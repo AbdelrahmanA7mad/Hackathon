@@ -1,34 +1,59 @@
 ﻿@page
 @model LoginModel
-
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Register";
 }
-<link href="~/css/auth.css" rel="stylesheet" />
-
+<link href="~/css/reg.css" rel="stylesheet" />
 <div class="auth-container">
     <div class="auth-card">
-        <h2>Welcome Back</h2>
+        <h1>Log in</h1>
+        <p class="subtitle">Join us today and get started</p>
+        <div class="type-selector">
+            <button type="button" class="type-button active" data-type="Person">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Person
+            </button>
+            <button type="button" class="type-button" data-type="Company">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path>
+                    <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>
+                    <path d="M10 6h4"></path>
+                    <path d="M10 10h4"></path>
+                    <path d="M10 14h4"></path>
+                    <path d="M10 18h4"></path>
+                </svg>
+                Company
+            </button>
+        </div>
         <form id="account" method="post" class="auth-form">
-            <div class="form-group">
-                <label asp-for="Input.Email" >Email</label>
-                <input asp-for="Input.Email" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            <input type="hidden" asp-for="Input.UserType" id="userTypeInput" value="Person" />
+            <div class="form-container">
+                <div class="form-group">
+                    <label asp-for="Input.Email">Email</label>
+                    <input asp-for="Input.Email" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
 
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password">Password</label>
+                    <input asp-for="Input.Password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="checkbox mb-3">
+                    <label asp-for="Input.RememberMe" class="form-label">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                    </label>
+                </div>
+
+
+                <button id="login-submit" class="submit-button" type="submit">Log in</button>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Password" >Password</label>
-                <input asp-for="Input.Password" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="checkbox mb-3">
-                <label asp-for="Input.RememberMe" class="form-label">
-                    <input class="form-check-input" asp-for="Input.RememberMe" />
-                    @Html.DisplayNameFor(m => m.Input.RememberMe)
-                </label>
-            </div>
-            <button id="login-submit" class="cta-button" type="submit">Log in</button>
         </form>
+            
         <p class="auth-footer">
             Don't have an account? <a href="./Register">Sign up</a>
         </p>
@@ -37,4 +62,47 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const typeButtons = document.querySelectorAll('.type-button');
+            const userTypeInput = document.getElementById('userTypeInput');
+            const personForm = document.querySelector('.person-form');
+            const companyForm = document.querySelector('.company-form');
+
+            function toggleForms(userType) {
+                // Toggle active buttons
+                typeButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.type === userType);
+                });
+
+                // Toggle form sections and required attributes
+                if (userType === 'Person') {
+                    personForm.classList.add('active');
+                    companyForm.classList.remove('active');
+                    // Set Person fields as required
+                    personForm.querySelectorAll('input').forEach(input => input.required = true);
+                    // Remove required from Company fields
+                    companyForm.querySelectorAll('input').forEach(input => input.required = false);
+                } else {
+                    companyForm.classList.add('active');
+                    personForm.classList.remove('active');
+                    // Set Company fields as required
+                    companyForm.querySelectorAll('input').forEach(input => input.required = true);
+                    // Remove required from Person fields
+                    personForm.querySelectorAll('input').forEach(input => input.required = false);
+                }
+            }
+
+            typeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const userType = button.dataset.type;
+                    userTypeInput.value = userType;
+                    toggleForms(userType);
+                });
+            });
+
+            // Initialize based on default UserType
+            toggleForms(userTypeInput.value);
+        });
+    </script>
 }

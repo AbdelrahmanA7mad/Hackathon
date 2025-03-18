@@ -5,6 +5,7 @@ using WaZuF.Models;
 using System.Net.Http;  // Add this
 using static WaZuF.Data.AppDbContext;
 using WaZuF.Services;
+using WaZuF.EmpServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +18,23 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IJobRequestService, JobRequestService>();
 
+builder.Services.AddScoped<IEmpService, EmpService>();
+
+
+builder.Services.AddAuthorization(options =>
+
+{
+    options.AddPolicy("PersonOnly", policy =>
+        policy.RequireClaim(" UserType", "Person"));
+
+    options.AddPolicy("CompanyOnly", policy =>
+        policy.RequireClaim("UserType", "Company"));
+});
 
 
 
 
+builder.Services.AddHttpClient<IEmpService, EmpService>();
 
 // Database Configuration
 var connectionString = builder.Configuration.GetConnectionString("MyConnection")
@@ -36,7 +50,7 @@ builder.Services.AddHttpClient<IGeminiService, GeminiService>();
 builder.Services.AddScoped<IJopService, JopService>();
 
 // Identity Configuration
-builder.Services.AddIdentity<Company, IdentityRole>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
@@ -75,6 +89,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages(); // ????? ???? Identity UI
+
 
 app.MapControllerRoute(
     name: "default",

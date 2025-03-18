@@ -7,6 +7,8 @@ using WaZuF.Models;
 
 namespace WaZuF.Controllers
 {
+    [Authorize(Policy = "CompanyOnly")]
+
     public class MainController : Controller
     {
         private readonly IJobRequestService _jobRequestService;

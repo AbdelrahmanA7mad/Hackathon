@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using WaZuF.Models
 
-@inject SignInManager<Company> SignInManager
-@inject UserManager<Company> UserManager
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

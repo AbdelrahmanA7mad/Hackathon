@@ -4,22 +4,24 @@ using WaZuF.Models;
 
 namespace WaZuF.Data
 {
-    public class AppDbContext : IdentityDbContext<Company>
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<JobRequest> JobRequests { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<CodeQuiz> CodeQuizs { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Exam> Exams { get; set; }
         public DbSet<EmployeeAnswer> EmployeeAnswers { get; set; } // ✅ Renamed
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // JobRequest and Company Relationship
+            // JobRequest and AppUser Relationship
             modelBuilder.Entity<JobRequest>()
-                .HasOne(j => j.Company)
+                .HasOne(j => j.AppUser)
                 .WithMany(c => c.JobRequests)
                 .HasForeignKey(j => j.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
