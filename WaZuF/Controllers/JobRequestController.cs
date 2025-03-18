@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 public class JobRequestController : Controller
 {
     private readonly IJobRequestService _jobRequestService;
-    private readonly UserManager<Company> _userManager;
+    private readonly UserManager<AppUser> _userManager;
 
-    public JobRequestController(IJobRequestService jobRequestService, UserManager<Company> userManager)
+    public JobRequestController(IJobRequestService jobRequestService, UserManager<AppUser> userManager)
     {
         _jobRequestService = jobRequestService;
         _userManager = userManager;
