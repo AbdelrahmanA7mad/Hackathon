@@ -1,4 +1,6 @@
 ﻿using WaZuF.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public interface IJobRequestService
 {
@@ -7,7 +9,8 @@ public interface IJobRequestService
     Task AddJobRequestAsync(JobRequest jobRequest);
     Task UpdateJobRequestAsync(JobRequest jobRequest);
     Task DeleteJobRequestAsync(int id);
-    Task<int> GetTotalJobsAsync();
-    Task<List<JobRequest>> GetLatestJobRequestsAsync(int count);
-
+    Task<int> GetTotalJobsAsync(string companyId);
+    Task<List<JobRequest>> GetJobRequestsByCompanyIdAsync(string companyId);
+    Task<List<JobRequest>> GetLatestJobRequestsAsync(string companyId, int count = 5);
+    Task<bool> DeleteJobRequestAsync(int jobId, string companyId);
 }
