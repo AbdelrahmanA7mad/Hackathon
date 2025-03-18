@@ -21,11 +21,13 @@ namespace WaZuF.Controllers
         [Authorize]
         public async Task<IActionResult> Dashboard()
         {
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
             var totalJobs = await _jobRequestService.GetTotalJobsAsync(user.Id);
             var latestJobs = await _jobRequestService.GetLatestJobRequestsAsync(user.Id, 5);
+
 
             ViewBag.TotalJobs = totalJobs;
             ViewBag.LatestJobs = latestJobs;
