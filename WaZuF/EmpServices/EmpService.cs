@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using WaZuF.Data;
+using WaZuF.Models;
 
 namespace WaZuF.EmpServices
 {
@@ -12,11 +14,13 @@ namespace WaZuF.EmpServices
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
+        private readonly AppDbContext _db;
 
-        public EmpService(HttpClient httpClient, IConfiguration config)
+        public EmpService(HttpClient httpClient, IConfiguration config ,AppDbContext db)
         {
             _httpClient = httpClient;
             _config = config;
+            _db = db;
         }
 
         public async Task<string> GenerateCodingTasksAsync(CodeQuiz viewModel)
@@ -29,8 +33,19 @@ namespace WaZuF.EmpServices
             var jsonResponse = JsonConvert.DeserializeObject<dynamic>(apiResponse);
             string questionText = jsonResponse?.candidates[0]?.content?.parts[0]?.text ?? "Failed to generate question.";
 
+            //Exam exam = new Exam
+            //{
+            //    QuizId = viewModel.Id,   // تأكد أن viewModel.Id يحتوي على قيمة صحيحة
+            //    description = viewModel.Description,
+            //    Question = questionText, // حفظ السؤال في قاعدة البيانات
+            //};
+
+            //_db.Exams.Add(exam);
+            //await _db.SaveChangesAsync(); // استخدم await لحفظ التغييرات بشكل متزامن
+
             return questionText;
         }
+
 
 
         public async Task<string> CheckSolutionAsync(string problemStatement, string userSolution)
@@ -87,9 +102,5 @@ namespace WaZuF.EmpServices
         }
     }
 
-    public class CodeQuiz
-    {
-        public string Description { get; set; }
-    }
 
 }

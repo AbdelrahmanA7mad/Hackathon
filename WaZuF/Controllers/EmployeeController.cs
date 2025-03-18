@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WaZuF.EmpServices;
 using WaZuF.EmpViewModel;
 using System.Threading.Tasks;
+using WaZuF.Models;
 
 namespace WaZuF.Controllers
 {
@@ -34,7 +35,7 @@ namespace WaZuF.Controllers
                 return BadRequest(new { error = "Job description is required." });
             }
 
-            var question = await _empService.GenerateCodingTasksAsync(new WaZuF.EmpServices.CodeQuiz
+            var question = await _empService.GenerateCodingTasksAsync(new CodeQuiz
             {
                 Description = model.JobDescription
             });
