@@ -1,34 +1,111 @@
-﻿
+﻿@model EmployeeViewModel
 <link href="~/css/empcss.css" rel="stylesheet" />
+
 <div class="container">
     <header>
         <nav class="main-nav">
-            <a href="index.html" class="nav-link active">Dashboard</a>
-            <a href="quizzes.html" class="nav-link">My Quizzes</a>
+            <a asp-controller="Home" asp-action="Index" class="nav-link active">Dashboard</a>
+            <a asp-controller="Quiz" asp-action="Index" class="nav-link">My Quizzes</a>
         </nav>
         <h1>Employee Training Dashboard</h1>
-        <p>Generate personalized training modules based on job descriptions</p>
+        <p>Generate personalized coding tasks based on job descriptions</p>
     </header>
 
     <main>
         <section class="input-section">
-            <h2>Create New Training Module</h2>
+            <h2>Create New Coding Task</h2>
             <div class="input-container">
                 <textarea id="jobDescription"
+                          asp-for="JobDescription"
                           placeholder="Enter the job description here..."
-                          rows="6"></textarea>
-                <button id="generateBtn" class="primary-btn">Generate Training Module</button>
+                          rows="4"></textarea>
+                <button id="generateBtn" class="primary-btn">Generate Coding Task</button>
             </div>
         </section>
 
-        <section class="modules-section">
-            <h2>Available Training Modules</h2>
-            <div id="modulesList" class="modules-grid">
-                <!-- Modules will be dynamically added here -->
-            </div>
-        </section>
+        <div id="questionContainer" style="display: none;">
+            <h3>Generated Question:</h3>
+            <p id="generatedQuestion"></p>
+            <textarea id="userSolution" placeholder="Write your solution here..." rows="6"></textarea>
+            <button id="submitSolutionBtn" class="primary-btn">Submit Solution</button>
+            <p id="solutionFeedback"></p>
+        </div>
     </main>
 </div>
+
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const generateBtn = document.getElementById("generateBtn");
+        const submitSolutionBtn = document.getElementById("submitSolutionBtn");
+        const jobDescriptionInput = document.getElementById("jobDescription");
+        const questionContainer = document.getElementById("questionContainer");
+        const generatedQuestion = document.getElementById("generatedQuestion");
+        const userSolutionInput = document.getElementById("userSolution");
+        const solutionFeedback = document.getElementById("solutionFeedback");
+
+        // توليد سؤال بناءً على وصف الوظيفة
+        generateBtn.addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            let jobDescription = jobDescriptionInput.value.trim();
+            if (!jobDescription) {
+                alert("Job description is required.");
+                return;
+            }
+
+            try {
+                let response = await fetch("/Employee/GenerateQuestions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ JobDescription: jobDescription })
+                });
+
+                if (response.ok) {
+                    let data = await response.json();
+                    generatedQuestion.innerHTML = `<strong>Question:</strong> ${data.generatedQuestion}`;
+                    questionContainer.style.display = "block"; // إظهار السؤال
+                } else {
+                    let errorData = await response.json();
+                    alert("Error: " + errorData.error);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                alert("An error occurred while generating the question.");
+            }
+        });
+
+        // إرسال الحل والتحقق من النتيجة
+        submitSolutionBtn.addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            let problem = generatedQuestion.innerText.trim();
+            let solution = userSolutionInput.value.trim();
+
+            if (!problem || !solution) {
+                alert("Problem statement and solution cannot be empty.");
+                return;
+            }
+
+            try {
+                let response = await fetch("/Employee/SubmitSolution", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ Problem: problem, Solution: solution })
+                });
+
+                if (response.ok) {
+                    let data = await response.json();
+                    solutionFeedback.innerText = data.status === "correct" ? "✅ Correct answer!" : `❌ Incorrect. ${data.feedback}`;
+                    solutionFeedback.style.color = data.status === "correct" ? "green" : "red";
+                } else {
+                    let errorData = await response.json();
+                    alert("Error: " + errorData.error);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                alert("An error occurred while submitting the solution.");
+            }
+        });
+    });
 
 </script>

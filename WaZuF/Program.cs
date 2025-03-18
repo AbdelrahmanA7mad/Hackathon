@@ -5,6 +5,7 @@ using WaZuF.Models;
 using System.Net.Http;  // Add this
 using static WaZuF.Data.AppDbContext;
 using WaZuF.Services;
+using WaZuF.EmpServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddScoped<IJobRequestService, JobRequestService>();
+
+builder.Services.AddScoped<IEmpService, EmpService>();
 
 
 builder.Services.AddAuthorization(options =>
@@ -31,6 +34,7 @@ builder.Services.AddAuthorization(options =>
 
 
 
+builder.Services.AddHttpClient<IEmpService, EmpService>();
 
 // Database Configuration
 var connectionString = builder.Configuration.GetConnectionString("MyConnection")
@@ -85,6 +89,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages(); // ????? ???? Identity UI
+
 
 app.MapControllerRoute(
     name: "default",

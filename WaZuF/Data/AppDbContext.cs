@@ -10,6 +10,7 @@ namespace WaZuF.Data
 
         public DbSet<JobRequest> JobRequests { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<CodeQuiz> CodeQuizs { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeAnswer> EmployeeAnswers { get; set; } // ✅ Renamed
 
