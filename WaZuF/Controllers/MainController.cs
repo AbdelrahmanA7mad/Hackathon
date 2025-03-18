@@ -12,9 +12,9 @@ namespace WaZuF.Controllers
     public class MainController : Controller
     {
         private readonly IJobRequestService _jobRequestService;
-        private readonly UserManager<Company> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public MainController(IJobRequestService jobRequestService, UserManager<Company> userManager)
+        public MainController(IJobRequestService jobRequestService, UserManager<AppUser> userManager)
         {
             _jobRequestService = jobRequestService;
             _userManager = userManager;
