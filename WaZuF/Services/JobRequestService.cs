@@ -1,9 +1,12 @@
-﻿namespace WaZuF.Services
-{
-    using Microsoft.EntityFrameworkCore;
-    using WaZuF.Data;
-    using WaZuF.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using WaZuF.Data;
+using WaZuF.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
+namespace WaZuF.Services
+{
     public class JobRequestService : IJobRequestService
     {
         private readonly AppDbContext _context;
@@ -45,17 +48,27 @@
             }
         }
 
-        public async Task<int> GetTotalJobsAsync()
-        {
-            return await _context.JobRequests.CountAsync();
-        }
-
-        public async Task<List<JobRequest>> GetLatestJobRequestsAsync(int count)
+        public async Task<int> GetTotalJobsAsync(string companyId)
         {
             return await _context.JobRequests
-                .OrderByDescending(j => j.Id)
-                .Take(count)
-                .ToListAsync();
+                                 .Where(j => j.CompanyId == companyId)
+                                 .CountAsync();
+        }
+
+        public async Task<List<JobRequest>> GetJobRequestsByCompanyIdAsync(string companyId)
+        {
+            return await _context.JobRequests
+                                 .Where(j => j.CompanyId == companyId)
+                                 .ToListAsync();
+        }
+
+        public async Task<List<JobRequest>> GetLatestJobRequestsAsync(string companyId, int count = 5)
+        {
+            return await _context.JobRequests
+                                 .Where(j => j.CompanyId == companyId)
+                                 .OrderByDescending(j => j.Id)
+                                 .Take(count)
+                                 .ToListAsync();
         }
     }
 }
