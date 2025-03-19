@@ -1,147 +1,170 @@
-﻿
-<link rel="stylesheet" href="~/css/Details.css">
+﻿@model List<Employee>
 
-<body>
-    <div class="container">
-        <header>
-            <h1>Employee Performance Dashboard</h1>
-            <div class="controls">
-                <div class="filter-group">
-                    <label for="sortBy">Sort by:</label>
-                    <select id="sortBy" onchange="sortTable(this.value)">
-                        <option value="score">Score</option>
-                        <option value="average">Average</option>
-                        <option value="timeSpent">Time Spent</option>
-                        <option value="date">Date</option>
-                    </select>
-                </div>
-                <button class="export-btn" onclick="exportData()">
-                    <i class="fas fa-download"></i> Export Data
-                </button>
-            </div>
-        </header>
+<link href="~/css/detailsof.css" rel="stylesheet" />
 
-        <main>
-            <table id="employeeTable">
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1>Exam Results</h1>
+            <button id="exportBtn" class="export-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export CSV
+            </button>
+        </div>
+
+        <div class="search-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search by name, email or score...">
+        </div>
+
+        <div class="table-container">
+            <table>
                 <thead>
                     <tr>
-                        <th>Employee</th>
-                        <th>Score</th>
-                        <th>Average</th>
-                        <th>Time Spent</th>
-                        <th>Date</th>
-                        <th>Contact</th>
+                        <th data-sort="name">Name <span class="sort-indicator"></span></th>
+                        <th data-sort="email">Email <span class="sort-indicator"></span></th>
+                        <th data-sort="score">Score <span class="sort-indicator"></span></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>John Smith</td>
-                        <td>95</td>
-                        <td>92.5</td>
-                        <td>2h 30m</td>
-                        <td>2024-01-15</td>
-                        <td><a href="mailto:john@example.com"><i class="fas fa-envelope"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>Sarah Johnson</td>
-                        <td>88</td>
-                        <td>85.7</td>
-                        <td>1h 45m</td>
-                        <td>2024-01-14</td>
-                        <td><a href="mailto:sarah@example.com"><i class="fas fa-envelope"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>Michael Brown</td>
-                        <td>92</td>
-                        <td>89.3</td>
-                        <td>3h 15m</td>
-                        <td>2024-01-13</td>
-                        <td><a href="mailto:michael@example.com"><i class="fas fa-envelope"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>Emily Davis</td>
-                        <td>97</td>
-                        <td>94.8</td>
-                        <td>2h 15m</td>
-                        <td>2024-01-12</td>
-                        <td><a href="mailto:emily@example.com"><i class="fas fa-envelope"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>David Wilson</td>
-                        <td>85</td>
-                        <td>82.4</td>
-                        <td>1h 30m</td>
-                        <td>2024-01-11</td>
-                        <td><a href="mailto:david@example.com"><i class="fas fa-envelope"></i></a></td>
-                    </tr>
+                <tbody id="resultsBody">
+                    @foreach (var employee in Model)
+                    {
+                        <tr>
+                            <td>@employee.Name</td>
+                            <td>@employee.Email</td>
+                            <td>@employee.Score</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-        </main>
+        </div>
     </div>
+</div>
 
-    <script>
-        function sortTable(column) {
-            const table = document.getElementById('employeeTable');
-            const tbody = table.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
+<script>
+    // Sample data - in a real app this would come from an API/database
 
-            const getColumnIndex = () => {
-                switch(column) {
-                    case 'score': return 1;
-                    case 'average': return 2;
-                    case 'timeSpent': return 3;
-                    case 'date': return 4;
-                    default: return 0;
-                }
-            };
+    // State management
+    let currentSort = {
+        key: '',
+        direction: 'asc'
+    };
 
-            rows.sort((a, b) => {
-                const columnIndex = getColumnIndex();
-                const aValue = a.cells[columnIndex].textContent;
-                const bValue = b.cells[columnIndex].textContent;
+    // DOM Elements
+    const searchInput = document.getElementById('searchInput');
+    const resultsBody = document.getElementById('resultsBody');
+    const exportBtn = document.getElementById('exportBtn');
+    const tableHeaders = document.querySelectorAll('th[data-sort]');
 
-                if (column === 'date') {
-                    return new Date(bValue) - new Date(aValue);
-                } else if (column === 'timeSpent') {
-                    const getMinutes = (time) => {
-                        const [h, m] = time.match(/(\d+)h\s+(\d+)m/).slice(1);
-                        return parseInt(h) * 60 + parseInt(m);
-                    };
-                    return getMinutes(bValue) - getMinutes(aValue);
-                } else {
-                    return parseFloat(bValue) - parseFloat(aValue);
-                }
-            });
+    // Event Listeners
+    searchInput.addEventListener('input', renderResults);
+    exportBtn.addEventListener('click', exportToCSV);
+    tableHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const key = header.getAttribute('data-sort');
+            handleSort(key);
+        });
+    });
 
-            tbody.innerHTML = '';
-            rows.forEach(row => tbody.appendChild(row));
+    // Sort handling
+    function handleSort(key) {
+        if (currentSort.key === key) {
+            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSort.key = key;
+            currentSort.direction = 'asc';
         }
 
-        function exportData() {
-            const table = document.getElementById('employeeTable');
-            const rows = Array.from(table.querySelectorAll('tr'));
+        // Update sort indicators
+        tableHeaders.forEach(header => {
+            if (header.getAttribute('data-sort') === key) {
+                header.setAttribute('data-sort-direction', currentSort.direction);
+            } else {
+                header.removeAttribute('data-sort-direction');
+            }
+        });
 
-            let csvContent = "data:text/csv;charset=utf-8,";
+        renderResults();
+    }
 
-            rows.forEach(row => {
-                const cells = Array.from(row.cells);
-                const rowData = cells.map(cell => {
-                    // Skip the email icon, use the mailto href instead
-                    if (cell.querySelector('.fa-envelope')) {
-                        return cell.querySelector('a').href.replace('mailto:', '');
-                    }
-                    return cell.textContent;
-                }).join(",");
-                csvContent += rowData + "\r\n";
+    // Filter and sort results
+    function getFilteredAndSortedResults() {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        // Filter results
+        const filtered = examResults.filter(result =>
+            result.name.toLowerCase().includes(searchTerm) ||
+            result.email.toLowerCase().includes(searchTerm) ||
+            result.score.toString().includes(searchTerm)
+        );
+
+        // Sort results
+        if (currentSort.key) {
+            filtered.sort((a, b) => {
+                if (currentSort.key === 'score') {
+                    return currentSort.direction === 'asc'
+                        ? a[currentSort.key] - b[currentSort.key]
+                        : b[currentSort.key] - a[currentSort.key];
+                }
+
+                return currentSort.direction === 'asc'
+                    ? a[currentSort.key].localeCompare(b[currentSort.key])
+                    : b[currentSort.key].localeCompare(a[currentSort.key]);
             });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "employee_data.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
-    </script>
-</body>
+
+        return filtered;
+    }
+
+    // Render results
+    function renderResults() {
+        const results = getFilteredAndSortedResults();
+
+        if (results.length === 0) {
+            resultsBody.innerHTML = `
+          <tr>
+            <td colspan="3" class="empty-message">No results found</td>
+          </tr>
+        `;
+            return;
+        }
+
+        resultsBody.innerHTML = results.map(result => `
+        <tr>
+          <td>${result.name}</td>
+          <td>${result.email}</td>
+          <td>${result.score}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Export to CSV
+    function exportToCSV() {
+        const results = getFilteredAndSortedResults();
+        const headers = ['Name', 'Email', 'Score'];
+        const csvContent = [
+            headers.join(','),
+            ...results.map(result =>
+                [result.name, result.email, result.score].join(',')
+            )
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'exam_results.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+
+    // Initial render
+    renderResults();
+</script>

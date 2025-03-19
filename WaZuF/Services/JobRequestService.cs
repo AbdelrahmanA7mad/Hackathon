@@ -16,6 +16,13 @@ namespace WaZuF.Services
             _context = context;
         }
 
+        public async Task<List<Employee>> GetAllEmployee(int id)
+        {
+            return await _context.Employees
+                .Where(e => e.JobRequestId == id)
+                .ToListAsync();
+        }
+
         public async Task<List<JobRequest>> GetAllJobRequestsAsync()
         {
             return await _context.JobRequests.ToListAsync();
@@ -80,5 +87,6 @@ namespace WaZuF.Services
             return true;
         }
 
+  
     }
 }
