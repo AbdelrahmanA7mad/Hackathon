@@ -19,6 +19,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IJobRequestService, JobRequestService>();
 
 builder.Services.AddScoped<IEmpService, EmpService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+
 
 
 builder.Services.AddAuthorization(options =>

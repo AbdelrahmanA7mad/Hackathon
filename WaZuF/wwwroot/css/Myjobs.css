@@ -623,3 +623,26 @@ h2 {
     .btn-primary:active {
         transform: translateY(0);
     }
+
+
+.job-details .detail-group .exam-link {
+    color: #007bff; /* Blue link color */
+    text-decoration: underline;
+    word-break: break-all; /* Ensure long URLs wrap */
+}
+
+    .job-details .detail-group .exam-link:hover {
+        color: #0056b3; /* Darker blue on hover */
+    }
+
+.copy-icon {
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 18px;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+    .copy-icon.copied {
+        color: #28a745; /* لون أخضر لعلامة الصح */
+    }
