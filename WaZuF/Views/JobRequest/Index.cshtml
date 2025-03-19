@@ -9,6 +9,10 @@
         <header>
             <h1>My Jobs</h1>
             <div class="buttons-container">
+
+                <a asp-action="Dashboard" asp-controller="main" id="backToHistory" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
                 <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     @Html.AntiForgeryToken()
                     <button id="logout" type="submit" class="btn btn-danger rounded-pill fw-semibold">Logout</button>
