@@ -115,7 +115,7 @@
             <div class="modal-content">
                 <h3>Exam Link</h3>
                 <div class="link-container">
-                    <input type="text" value="@Url.Action("TakeExam", "Logic", new { jobRequestId = ViewBag.JobRequestId }, "https")" readonly>
+                    <input type="text" value="@Url.Action("ExamEntry", "Logic", new { jobRequestId = ViewBag.JobRequestId }, "https")" readonly>
                     <button class="copy-btn" onclick="copyToClipboard()">
                         <i class="fas fa-copy"></i>
                     </button>
@@ -124,7 +124,7 @@
                     <label for="save-modal" class="btn-primary">Close</label>
                     <form asp-action="SaveExamLink" asp-controller="Logic" method="post">
                         <input type="hidden" name="jobRequestId" value="@ViewBag.JobRequestId" />
-                        <input type="hidden" name="examLink" value="@Url.Action("TakeExam", "Logic", new { jobRequestId = ViewBag.JobRequestId }, "https")" />
+                        <input type="hidden" name="examLink" value="@Url.Action("ExamEntry", "Logic", new { jobRequestId = ViewBag.JobRequestId }, "https")" />
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn-primary">Finish</button>
                     </form>

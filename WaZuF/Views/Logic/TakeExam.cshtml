@@ -1,11 +1,9 @@
-﻿@model List<WaZuF.Models.Question>
+﻿@model WaZuF.ViewModels.ExamViewModel
 
 @{
     ViewData["Title"] = "Take Exam";
 }
 
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <title>Take Exam</title>
     <link rel="stylesheet" href="~/css/Exam.css">
@@ -22,13 +20,15 @@
     <div class="container">
         <h2>Take Exam</h2>
 
-        @if (Model != null && Model.Count > 0)
+        @if (Model?.Questions != null && Model.Questions.Any())
         {
-            <form asp-action="TakeExam" asp-controller="Logic" method="post">
+            <form asp-action="SubmitExam" asp-controller="Logic" method="post">
                 @Html.AntiForgeryToken()
+                <input type="hidden" name="employeeId" value="@Model.EmployeeId" />
+
                 @{
                     int questionNumber = 1;
-                    foreach (var question in Model)
+                    foreach (var question in Model.Questions)
                     {
                         <div class="question-card">
                             <h4>Question @questionNumber: @question.Text</h4>
@@ -63,4 +63,3 @@
         }
     </div>
 </body>
-</html>

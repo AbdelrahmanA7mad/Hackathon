@@ -1,10 +1,6 @@
 ﻿@model WaZuF.ViewModels.ExamEntryViewModel
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Exam Entry</title>
     <link rel="stylesheet" href="~/css/Exam.css" asp-append-version="true" />
     <style>
@@ -25,7 +21,6 @@
             font-size: 0.9em;
         }
     </style>
-</head>
 <body>
     <div class="container">
         <h2>Please Enter Your Information</h2>
@@ -52,6 +47,7 @@
             <button type="submit" class="btn btn-primary">Proceed to Exam</button>
         </form>
     </div>
+
 
     @section Scripts {
         <partial name="_ValidationScriptsPartial" />
