@@ -26,15 +26,13 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 
 builder.Services.AddAuthorization(options =>
-
 {
     options.AddPolicy("PersonOnly", policy =>
-        policy.RequireClaim(" UserType", "Person"));
+        policy.RequireClaim("UserType", "Person")); // Remove extra space
 
     options.AddPolicy("CompanyOnly", policy =>
         policy.RequireClaim("UserType", "Company"));
 });
-
 
 
 
@@ -57,11 +55,11 @@ builder.Services.AddScoped<IJopService, JopService>();
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultUI()

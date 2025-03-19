@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WaZuF.Data;
 
@@ -11,9 +12,11 @@ using WaZuF.Data;
 namespace WaZuF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318231928_ss")]
+    partial class ss
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -305,9 +308,6 @@ namespace WaZuF.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AppUserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -315,24 +315,13 @@ namespace WaZuF.Migrations
                     b.Property<int>("QuizId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Solved")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Tries")
-                        .HasColumnType("int");
-
                     b.Property<string>("description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("solution")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("AppUserId1");
 
                     b.ToTable("Exams");
                 });
@@ -356,10 +345,6 @@ namespace WaZuF.Migrations
 
                     b.Property<int>("DifficultyLevel")
                         .HasColumnType("int");
-
-                    b.Property<string>("ExamLink")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
@@ -505,16 +490,9 @@ namespace WaZuF.Migrations
 
             modelBuilder.Entity("WaZuF.Models.Exam", b =>
                 {
-                    b.HasOne("WaZuF.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("WaZuF.Models.AppUser", null)
                         .WithMany("Exams")
-                        .HasForeignKey("AppUserId1");
-
-                    b.Navigation("AppUser");
+                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("WaZuF.Models.JobRequest", b =>

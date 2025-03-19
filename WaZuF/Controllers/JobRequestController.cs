@@ -83,6 +83,21 @@ public class JobRequestController : Controller
     }
 
     // POST: Delete job request
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var employees = await _jobRequestService.GetAllEmployee(id);
+
+        if (employees == null)
+        {
+            return NotFound(); 
+        }
+
+        return View(employees);
+    }
+
+
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
