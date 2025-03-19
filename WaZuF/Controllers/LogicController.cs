@@ -100,27 +100,58 @@ namespace WaZuF.Controllers
             {
                 return NotFound("No questions found for this exam.");
             }
-            return View(questions);
+
+            var model = new ExamEntryViewModel
+            {
+                JobRequestId = jobRequestId
+            };
+            return View("ExamEntry", model); // عرض صفحة إدخال البيانات أولاً
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public IActionResult TakeExam(Dictionary<int, string> answers)
+        public async Task<IActionResult> ExamEntry(ExamEntryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var questions = await _questionService.GetQuestionsByJobRequestIdAsync(model.JobRequestId);
+            if (questions == null || !questions.Any())
+            {
+                return NotFound("No questions found for this exam.");
+            }
+
+            ViewBag.Name = model.Name;
+            ViewBag.Email = model.Email;
+            return View("TakeExam", questions); // عرض الامتحان بعد إدخال البيانات
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public IActionResult TakeExam(Dictionary<int, string> answers, string name, string email)
         {
             if (answers == null || !answers.Any())
             {
                 return BadRequest("No answers provided.");
             }
 
-            // معالجة الإجابات المرسلة من الموظف
+            // معالجة الإجابات مع بيانات الموظف
             foreach (var answer in answers)
             {
                 // answer.Key هو QuestionId
                 // answer.Value هو الإجابة المختارة (a, b, c, d)
-                // يمكنك حفظها في قاعدة البيانات هنا
+                // يمكنك حفظها في قاعدة البيانات هنا مع الاسم والبريد الإلكتروني
             }
+
             return View("ExamSubmitted");
         }
+
+
     }
 }

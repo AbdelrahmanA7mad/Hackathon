@@ -122,6 +122,12 @@
                 </div>
                 <div class="modal-actions">
                     <label for="save-modal" class="btn-primary">Close</label>
+                    <form asp-action="SaveExamLink" asp-controller="Logic" method="post">
+                        <input type="hidden" name="jobRequestId" value="@ViewBag.JobRequestId" />
+                        <input type="hidden" name="examLink" value="@Url.Action("TakeExam", "Logic", new { jobRequestId = ViewBag.JobRequestId }, "https")" />
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-primary">Finish</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -132,7 +138,6 @@
             var link = document.querySelector('.link-container input');
             link.select();
             document.execCommand('copy');
-            alert('Link copied to clipboard!');
         }
     </script>
 </body>

@@ -235,10 +235,3 @@ h1 {
     }
 
 
-.question-card {
-    margin-bottom: 30px; /* زيادة المسافة بين الأسئلة */
-    padding: 20px; /* زيادة الحشوة الداخلية */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9; /* لون خلفية اختياري */
-}

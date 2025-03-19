@@ -33,7 +33,9 @@ namespace WaZuF.Models
 
         [ForeignKey("CompanyId")]
         public AppUser AppUser { get; set; } = null!;
+        [StringLength(500)] 
 
+        public string? ExamLink { get; set; }
         public List<Question> Questions { get; set; } = new();
         public List<Employee> Employees { get; set; } = new();
     }

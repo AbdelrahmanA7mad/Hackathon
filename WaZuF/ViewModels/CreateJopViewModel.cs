@@ -24,5 +24,8 @@ namespace WaZuF.ViewModels
         [Required]
         [Display(Name = "Difficulty Level")]
         public DifficultyLevel DifficultyLevel { get; set; } = DifficultyLevel.Medium;
+
+        public string ExamLink { get; set; } = string.Empty;
+
     }
 }
