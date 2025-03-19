@@ -49,10 +49,10 @@ public class RegisterModel : PageModel
         [Display(Name = "Account Type")]
         public string UserType { get; set; } // "Person" or "Company"
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string CompanyName { get; set; }
-        public string RegistrationNumber { get; set; }
+        public string ? FirstName { get; set; }
+        public string ?LastName { get; set; }
+        public string ? CompanyName { get; set; }
+        public string ? RegistrationNumber { get; set; }
 
         [Required]
         [EmailAddress]
@@ -74,10 +74,18 @@ public class RegisterModel : PageModel
 
     }
 
-    public async Task OnGetAsync(string returnUrl = null)
+    public async Task<IActionResult> OnGetAsync(string returnUrl = null)
     {
+        if (User.Identity.IsAuthenticated)
+        {
+            // Redirect authenticated users to a different page, e.g., home page or dashboard
+            return LocalRedirect("~/"); // Change this to your desired URL
+        }
+
         ReturnUrl = returnUrl;
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        return Page();
+
     }
 
     public async Task<IActionResult> OnPostAsync(string returnUrl = null)

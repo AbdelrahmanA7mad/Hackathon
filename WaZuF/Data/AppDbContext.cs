@@ -10,7 +10,6 @@ namespace WaZuF.Data
 
         public DbSet<JobRequest> JobRequests { get; set; }
         public DbSet<Question> Questions { get; set; }
-        public DbSet<CodeQuiz> CodeQuizs { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<EmployeeAnswer> EmployeeAnswers { get; set; } // ✅ Renamed
@@ -53,6 +52,14 @@ namespace WaZuF.Data
                 .WithMany(j => j.Questions)
                 .HasForeignKey(q => q.JobRequestId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Exam and AppUser Relationship
+            modelBuilder.Entity<Exam>()
+                .HasOne(e => e.AppUser)
+                .WithMany() // No navigation property in AppUser
+                .HasForeignKey(e => e.AppUserId)
+                .OnDelete(DeleteBehavior.SetNull); // ✅ Prevents FK constraint errors
+
         }
     }
 }

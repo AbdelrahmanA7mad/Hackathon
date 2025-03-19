@@ -2,89 +2,161 @@
 <link href="~/css/empcss.css" rel="stylesheet" />
 
 <div class="container">
-    <header>
-        <nav class="main-nav">
-            <a asp-controller="Home" asp-action="Index" class="nav-link active">Dashboard</a>
-            <a asp-controller="Quiz" asp-action="Index" class="nav-link">My Quizzes</a>
+    <div class="challenge-section">
+        <h1>:           Coding Train Generator            : </h1>
+       
+        <!-- Navigation -->
+        <nav class="nav-menu">
+            <a asp-action="History" id="viewHistory" class="nav-button text-decoration-none" >
+                
+                <i class="fas fa-history"></i> View History
+            </a>
         </nav>
-        <h1>Employee Training Dashboard</h1>
-        <p>Generate personalized coding tasks based on job descriptions</p>
-    </header>
 
-    <main>
-        <section class="input-section">
-            <h2>Create New Coding Task</h2>
-            <div class="input-container">
-                <textarea id="jobDescription"
-                          asp-for="JobDescription"
-                          placeholder="Enter the job description here..."
-                          rows="4"></textarea>
-                <button id="generateBtn" class="primary-btn">Generate Coding Task</button>
-            </div>
-        </section>
-
-        <div id="questionContainer" style="display: none;">
-            <h3>Generated Question:</h3>
-            <p id="generatedQuestion"></p>
-            <textarea id="userSolution" placeholder="Write your solution here..." rows="6"></textarea>
-            <button id="submitSolutionBtn" class="primary-btn">Submit Solution</button>
-            <p id="solutionFeedback"></p>
+        <!-- Job Description Input -->
+        <div class="input-section" id="jobDescriptionSection">
+            <h2>Enter Job Description</h2>
+            <textarea id="jobDescription" placeholder="Enter the job description here..."></textarea>
+            <button id="generateChallenge">Generate Challenge</button>
         </div>
-    </main>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay hidden" id="loadingOverlay">
+            <div class="loader"></div>
+            <p>Processing...</p>
+        </div>
+        <!-- Challenge Display -->
+        <div class="challenge-display hidden" id="challengeSection">
+            <h2>Coding Challenge</h2>
+            <div class="problem-statement" id="problemStatement"></div>
+            <!-- Result Animations -->
+            <div class="result-animation hidden" id="successAnimation">
+                <div class="success-checkmark">
+                    <div class="check-icon">
+                        <span class="icon-line line-tip"></span>
+                        <span class="icon-line line-long"></span>
+                    </div>
+                </div>
+                <p>Great job! Your solution is correct!</p>
+            </div>
+
+            <div class="result-animation hidden" id="failureAnimation">
+                <div class="failure-x">
+                    <div class="x-icon">
+                        <span class="icon-line line-left"></span>
+                        <span class="icon-line line-right"></span>
+                    </div>
+                </div>
+                <p>Not quite right. Try again!</p>
+            </div>
+            <textarea id="solution" placeholder="Write your solution here..."></textarea>
+            <button id="submitSolution">Submit Solution</button>
+        </div>
+
+        <!-- Continue or Finish Section -->
+        <div class="continue-section hidden" id="continueSection">
+            <button id="continueButton" class="success-button">
+                <i class="fas fa-forward"></i> Continue
+            </button>
+            <button id="finishButton" class="neutral-button">
+                <i class="fas fa-flag-checkered"></i> Finish
+            </button>
+        </div>
+
+        <!-- History Section -->
+        <div class="history-section hidden" id="historySection">
+            <h2>Your Progress History</h2>
+            <div class="history-list" id="historyList">
+                <!-- History items will be populated here -->
+            </div>
+            <button id="backToChallenge" class="neutral-button">
+                <i class="fas fa-arrow-left"></i> Back to Challenge
+            </button>
+        </div>
+
+         
+    </div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const generateBtn = document.getElementById("generateBtn");
-        const submitSolutionBtn = document.getElementById("submitSolutionBtn");
+        const generateBtn = document.getElementById("generateChallenge");
+        const submitSolutionBtn = document.getElementById("submitSolution");
         const jobDescriptionInput = document.getElementById("jobDescription");
-        const questionContainer = document.getElementById("questionContainer");
-        const generatedQuestion = document.getElementById("generatedQuestion");
-        const userSolutionInput = document.getElementById("userSolution");
-        const solutionFeedback = document.getElementById("solutionFeedback");
+        const jobDescriptionSection = document.getElementById("jobDescriptionSection");
+        const problemStatementDiv = document.getElementById("problemStatement");
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const successAnimation = document.getElementById('successAnimation');
+        const failureAnimation = document.getElementById('failureAnimation');
+        const solutionInput = document.getElementById("solution");
+        const continueBtn = document.getElementById("continueButton");
+        const finishBtn = document.getElementById("finishButton");
+        const continueSection = document.getElementById("continueSection");
+        const challengeSection = document.getElementById("challengeSection");
 
-        // توليد سؤال بناءً على وصف الوظيفة
-        generateBtn.addEventListener("click", async function (event) {
+        function showLoading() {
+            loadingOverlay.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            loadingOverlay.classList.add('hidden');
+        }
+        function resetForNewChallenge() {
+            solutionInput.value = '';
+            continueSection.classList.remove('hidden'); // Show continue/finish buttons
+            jobDescriptionSection.classList.add('hidden');
+            document.getElementById('challengeSection').classList.add('hidden');
+            document.getElementById('nav-menu').classList.add('hidden');
+        }
+
+        function resetFor_NewChallenge() {
+            solutionInput.value = '';
+            continueSection.classList.add('hidden'); // Show continue/finish buttons
+            document.getElementById('challengeSection').classList.remove('hidden');
+            document.getElementById('nav-menu').classList.remove('hidden');
+        }
+
+
+ 
+
+        function generateNewChallenge() {
+            showLoading();
+
+            fetch("/Employee/GenerateQuestions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ JobDescription: jobDescriptionInput.value.trim() })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    problemStatementDiv.innerHTML = `<strong>Question:</strong> ${data.generatedQuestion}`;
+                    continueSection.classList.add('hidden'); // Hide continue/finish buttons
+                    challengeSection.classList.remove('hidden'); // Show challenge section
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    alert("An error occurred while generating the question.");
+                })
+                .finally(() => hideLoading());
+        }
+
+        generateBtn.addEventListener("click", function (event) {
             event.preventDefault();
-
-            let jobDescription = jobDescriptionInput.value.trim();
-            if (!jobDescription) {
-                alert("Job description is required.");
-                return;
-            }
-
-            try {
-                let response = await fetch("/Employee/GenerateQuestions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ JobDescription: jobDescription })
-                });
-
-                if (response.ok) {
-                    let data = await response.json();
-                    generatedQuestion.innerHTML = `<strong>Question:</strong> ${data.generatedQuestion}`;
-                    questionContainer.style.display = "block"; // إظهار السؤال
-                } else {
-                    let errorData = await response.json();
-                    alert("Error: " + errorData.error);
-                }
-            } catch (error) {
-                console.error("Fetch error:", error);
-                alert("An error occurred while generating the question.");
-            }
+            generateNewChallenge();
         });
 
-        // إرسال الحل والتحقق من النتيجة
         submitSolutionBtn.addEventListener("click", async function (event) {
             event.preventDefault();
 
-            let problem = generatedQuestion.innerText.trim();
-            let solution = userSolutionInput.value.trim();
+            let problem = problemStatementDiv.innerText.trim();
+            let solution = solutionInput.value.trim();
 
             if (!problem || !solution) {
                 alert("Problem statement and solution cannot be empty.");
                 return;
             }
+
+            showLoading();
 
             try {
                 let response = await fetch("/Employee/SubmitSolution", {
@@ -95,8 +167,19 @@
 
                 if (response.ok) {
                     let data = await response.json();
-                    solutionFeedback.innerText = data.status === "correct" ? "✅ Correct answer!" : `❌ Incorrect. ${data.feedback}`;
-                    solutionFeedback.style.color = data.status === "correct" ? "green" : "red";
+
+                    if (data.status === "correct") {
+                        successAnimation.classList.remove('hidden');
+                        setTimeout(() => {
+                            successAnimation.classList.add('hidden');
+                            resetForNewChallenge();
+                        }, 2000);
+                    } else {
+                        failureAnimation.classList.remove('hidden');
+                        setTimeout(() => {
+                            failureAnimation.classList.add('hidden');
+                        }, 2000);
+                    }
                 } else {
                     let errorData = await response.json();
                     alert("Error: " + errorData.error);
@@ -104,7 +187,18 @@
             } catch (error) {
                 console.error("Fetch error:", error);
                 alert("An error occurred while submitting the solution.");
+            } finally {
+                hideLoading();
             }
+        });
+
+        continueBtn.addEventListener("click", function () {
+            generateNewChallenge();
+            resetFor_NewChallenge
+        });
+
+        finishBtn.addEventListener("click", function () {
+            window.location.href = "/Home/Index"; // Redirect to home page
         });
     });
 

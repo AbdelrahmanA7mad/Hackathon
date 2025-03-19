@@ -19,15 +19,16 @@ body {
     background-color: var(--background);
     color: var(--text);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+.page {
+    min-height: 100vh;
+    padding: 2rem;
 }
 
 .container {
-    width: 100%;
-    max-width: 800px;
-    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .challenge-section {
@@ -71,7 +72,7 @@ h2 {
         color: var(--background);
     }
 
-.input-section, .challenge-display, .history-section {
+.input-section, .challenge-display {
     margin-bottom: 2rem;
 }
 
@@ -140,35 +141,117 @@ button {
     white-space: pre-wrap;
 }
 
-/* History Section Styles */
-.history-list {
+/* History Grid Styles */
+.history-header, .problem-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 2rem;
 }
 
-.history-item {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
 }
 
-    .history-item h3 {
+.history-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .history-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .history-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: var(--secondary);
+    }
+
+    .history-card .status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .history-card .attempts {
+        color: var(--secondary);
+        font-size: 0.9rem;
+    }
+
+    .history-card .date {
+        color: var(--neutral);
+        font-size: 0.8rem;
+        margin-top: 1rem;
+    }
+
+/* Problem Details Styles */
+.problem-details-content {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.problem-details-header {
+    margin-bottom: 2rem;
+}
+
+.problem-details-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+    .stat-card h4 {
         color: var(--secondary);
         margin-bottom: 0.5rem;
     }
 
-    .history-item pre {
-        background: rgba(0, 0, 0, 0.2);
-        padding: 1rem;
-        border-radius: 6px;
-        overflow-x: auto;
-        margin: 0.5rem 0;
+.attempts-list {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.attempt-item {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .attempt-item:last-child {
+        border-bottom: none;
     }
 
-    .history-item .timestamp {
-        color: var(--neutral);
-        font-size: 0.9rem;
-    }
+.attempt-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.attempt-code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
 
 /* Loading Overlay */
 .loading-overlay {
@@ -194,43 +277,10 @@ button {
     animation: spin 1s linear infinite;
 }
 
-/* Success Animation */
-.success-checkmark {
-    width: 80px;
-    height: 80px;
+/* Success Animation Canvas */
+#successCanvas {
     margin: 0 auto;
-    position: relative;
-}
-
-.check-icon {
-    width: 80px;
-    height: 80px;
-    position: relative;
-    border-radius: 50%;
-    background-color: var(--success);
-    animation: checkmark 0.8s ease-in-out;
-}
-
-.icon-line {
-    position: absolute;
-    background-color: white;
-    border-radius: 2px;
-}
-
-.line-tip {
-    top: 46px;
-    left: 14px;
-    width: 25px;
-    height: 5px;
-    transform: rotate(45deg);
-}
-
-.line-long {
-    top: 38px;
-    right: 8px;
-    width: 47px;
-    height: 5px;
-    transform: rotate(-45deg);
+    display: block;
 }
 
 /* Failure Animation */
@@ -275,20 +325,6 @@ button {
 
     100% {
         transform: rotate(360deg);
-    }
-}
-
-@keyframes checkmark {
-    0% {
-        transform: scale(0);
-    }
-
-    50% {
-        transform: scale(1.2);
-    }
-
-    100% {
-        transform: scale(1);
     }
 }
 

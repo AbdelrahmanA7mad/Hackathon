@@ -2,9 +2,12 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using WaZuF.Data;
+using WaZuF.EmpViewModel;
 using WaZuF.Models;
 
 namespace WaZuF.EmpServices
@@ -12,20 +15,40 @@ namespace WaZuF.EmpServices
 
     public class EmpService : IEmpService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
         private readonly AppDbContext _db;
+        private readonly UserManager<AppUser> _userManager;
 
-        public EmpService(HttpClient httpClient, IConfiguration config ,AppDbContext db)
+
+        public EmpService(HttpClient httpClient, IConfiguration config ,AppDbContext db, UserManager<AppUser> userManager , IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
             _config = config;
             _db = db;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<string> GenerateCodingTasksAsync(CodeQuiz viewModel)
+
+        public async Task<List<Exam>> GetAllExams()
         {
-            var prompt = $"You are an expert programming instructor. Generate a coding problem based on the following description:\n\n{viewModel.Description}\n\nFollow these rules:\n1. The problem must require writing a function or algorithm to solve it.\n2. Provide clear input and output examples.\n3. Return the response as plain text without formatting.\n4. Do NOT include solutions, only problem statements.";
+            var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext?.User);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new List<Exam>(); // Return an empty list to avoid null errors
+            }
+
+            return await _db.Exams
+                .Where(e => e.AppUser.Id == userId)
+                .ToListAsync();
+        }
+
+        public async Task<string> GenerateCodingTasksAsync(Exam viewModel)
+        {
+            var prompt = $"You are an expert programming instructor. Generate a coding problem based on the following description:\n\n{viewModel.description}\n\nFollow these rules:\n1. The problem must require writing a function or algorithm to solve it.\n2. Provide clear input and output examples.\n3. Return the response as plain text without formatting.\n4. Do NOT include solutions, only problem statements.";
 
             string apiResponse = await CallGeminiApiWithRetry(prompt, 3);
 
@@ -33,26 +56,57 @@ namespace WaZuF.EmpServices
             var jsonResponse = JsonConvert.DeserializeObject<dynamic>(apiResponse);
             string questionText = jsonResponse?.candidates[0]?.content?.parts[0]?.text ?? "Failed to generate question.";
 
-            //Exam exam = new Exam
-            //{
-            //    QuizId = viewModel.Id,   // تأكد أن viewModel.Id يحتوي على قيمة صحيحة
-            //    description = viewModel.Description,
-            //    Question = questionText, // حفظ السؤال في قاعدة البيانات
-            //};
+            var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+ 
+            Exam exam = new Exam
+            {
+                AppUserId= userId,
+                description = viewModel.description,
+                Question = questionText, // حفظ السؤال في قاعدة البيانات
+            };
 
-            //_db.Exams.Add(exam);
-            //await _db.SaveChangesAsync(); // استخدم await لحفظ التغييرات بشكل متزامن
+            _db.Exams.Add(exam);
+            await _db.SaveChangesAsync(); // استخدم await لحفظ التغييرات بشكل متزامن
 
             return questionText;
         }
-
-
-
         public async Task<string> CheckSolutionAsync(string problemStatement, string userSolution)
         {
             var prompt = $"You are an AI coding evaluator. Evaluate the following solution for correctness.\n\nProblem: {problemStatement}\nUser Solution:\n```\n{userSolution}\n```\n\nProvide feedback:\n- If correct, say: 'Correct! Here is your next challenge.'\n- If incorrect, explain why and ask the user to retry.";
-            return await CallGeminiApiWithRetry(prompt, 3);
+
+            string response = await CallGeminiApiWithRetry(prompt, 3);
+
+            var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+
+            var exam = await _db.Exams
+              .Where(e => e.AppUserId == userId) // تصفية الامتحانات حسب المستخدم
+              .OrderByDescending(e => e.Id) // ترتيب تنازليًا للحصول على آخر امتحان محفوظ
+              .FirstOrDefaultAsync();
+
+
+            // If the solution is correct, update the database
+            if (response.Contains("Correct! Here is your next challenge."))
+            {
+                if (exam != null)
+                {
+                    exam.Solved = true;
+                    exam.solution = userSolution;
+                    await _db.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                if (exam != null)
+                {
+                    exam.Tries++;
+                    await _db.SaveChangesAsync();
+                }
+
+            }
+
+            return response;
         }
+
 
         public async Task<string> EvaluateCodeAsync(CodeSubmission submission)
         {
@@ -82,6 +136,7 @@ namespace WaZuF.EmpServices
                         throw new ApplicationException($"API Error {response.StatusCode}: {content}");
                     }
                     return content;
+
                 }
                 catch (HttpRequestException) when (attempt < retryCount - 1)
                 {
@@ -100,6 +155,8 @@ namespace WaZuF.EmpServices
             }
             return apiKey;
         }
+
+ 
     }
 
 

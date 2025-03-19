@@ -4,17 +4,21 @@ using WaZuF.EmpServices;
 using WaZuF.EmpViewModel;
 using System.Threading.Tasks;
 using WaZuF.Models;
+using WaZuF.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WaZuF.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "PersonOnly")]
     public class EmployeeController : Controller
     {
         private readonly IEmpService _empService;
+        private readonly AppDbContext _db;
 
-        public EmployeeController(IEmpService empService)
+        public EmployeeController(IEmpService empService , AppDbContext db)
         {
             _empService = empService;
+            _db = db;
         }
 
         public IActionResult Index()
@@ -22,10 +26,55 @@ namespace WaZuF.Controllers
             return View();
         }
 
-        public IActionResult Exam()
+        public async Task<IActionResult> History()
         {
-            return View();
+            var examss = await _empService.GetAllExams(); // No need to pass viewModel
+
+            var historyViewModel = new HistoryViewModel
+            {
+                exams = examss.Select(e => new Exam
+                {
+                    Id = e.Id,
+                    Solved = e.Solved,
+                    Tries = e.Tries,
+                }).ToList()
+            };
+
+            return View(historyViewModel);
         }
+        public async Task<IActionResult> Details(int id)
+        {
+            var exam = await _db.Exams
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (exam == null)
+            {
+                return NotFound(); // Handle case when exam is not found
+            }
+            double rate;
+            if (exam.Solved)
+            {
+               rate = (100 - ((exam.Tries - 1) * 10));
+
+            }
+            else
+            {
+                rate = 0;
+            }
+            var detailsViewModel = new ExamDetailsViewModel
+            {
+                Id = exam.Id,
+                question = exam.Question,
+                solution = exam.solution,
+                Status = exam.Solved,
+                Success_Rate = rate,
+                Attempts = exam.Tries,
+            };
+
+            return View(detailsViewModel);
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> GenerateQuestions([FromBody] EmployeeViewModel model)
@@ -35,9 +84,9 @@ namespace WaZuF.Controllers
                 return BadRequest(new { error = "Job description is required." });
             }
 
-            var question = await _empService.GenerateCodingTasksAsync(new CodeQuiz
+            var question = await _empService.GenerateCodingTasksAsync(new Exam
             {
-                Description = model.JobDescription
+                description = model.JobDescription
             });
 
             if (question == null)

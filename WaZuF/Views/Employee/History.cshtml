@@ -1,0 +1,37 @@
+﻿@model HistoryViewModel
+<link href="~/css/history.css" rel="stylesheet" />
+
+<body>
+    <div class="page">
+        <div class="container">
+            <div class="history-header">
+                <h1>Challenge History</h1>
+                <a asp-action="Index" id="backToHistory" class="nav-button text-decoration-none">
+                    <i class="fas fa-arrow-left"></i> Back to Challange
+                </a>
+            </div>
+            <div class="history-grid" id="historyGrid">
+
+            @foreach (var entry in Model.exams)
+            {
+                    <div class="history-card" onclick="window.location.href='@Url.Action("Details", "Employee", new { id = entry.Id })'">
+                        <h3>Coding Challenge</h3>
+                    <div class="status">
+                        @if (entry.Solved)
+                        {
+                            <i class="fas fa-check-circle" style="color: var(--success)"></i> <span>Solved</span>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times-circle" style="color: var(--error)"></i> <span>Unsolved</span>
+                        }
+                    </div>
+                    <div class="attempts">
+                        Attempts: @entry.Tries
+                    </div>
+                </div>
+            }
+        </div>
+        </div>
+    </div>
+</body>
