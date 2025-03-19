@@ -9,7 +9,7 @@ namespace WaZuF.Models
         public string description { get; set; }
         public string Question { get; set; }
         public string ? solution { get; set; }
-        public int QuizId { get; set; }
+        public int ?QuizId { get; set; }
 
         public int Tries { get; set; } = 1;
 
