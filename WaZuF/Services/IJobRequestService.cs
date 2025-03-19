@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 public interface IJobRequestService
 {
     Task<List<JobRequest>> GetAllJobRequestsAsync();
+    Task<List<Employee>> GetAllEmployee(int id);
     Task<JobRequest?> GetJobRequestByIdAsync(int id);
     Task AddJobRequestAsync(JobRequest jobRequest);
     Task UpdateJobRequestAsync(JobRequest jobRequest);
