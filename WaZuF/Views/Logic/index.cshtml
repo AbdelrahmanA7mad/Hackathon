@@ -1,25 +1,139 @@
-﻿<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-    Launch demo modal
-</button>
+﻿@model List<WaZuF.Models.Question>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+@{
+    ViewData["Title"] = "Interactive Exam Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Interactive Exam Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/Exam.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Interactive Exam</h1>
+            <button class="save-btn" onclick="document.getElementById('save-modal').checked = true">
+                <i class="fas fa-save"></i> Save Exam
+            </button>
+        </header>
+
+        <main class="question-list">
+            @if (Model != null && Model.Count > 0)
+            {
+                int questionNumber = 1;
+                foreach (var question in Model)
+                {
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Question @questionNumber</span>
+                            <div class="question-actions">
+                                <button class="action-btn edit" onclick="document.getElementById('confirm-edit-@question.Id').checked = true">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn regenerate" onclick="document.getElementById('confirm-regenerate-@question.Id').checked = true">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="document.getElementById('confirm-delete-@question.Id').checked = true">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="question-text">@question.Text</p>
+                        <div class="choices">
+                            <label class="choice">
+                                <input type="radio" name="q_@question.Id" value="a">
+                                <span class="choice-text">@question.OptionA</span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="q_@question.Id" value="b">
+                                <span class="choice-text">@question.OptionB</span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="q_@question.Id" value="c">
+                                <span class="choice-text">@question.OptionC</span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="q_@question.Id" value="d">
+                                <span class="choice-text">@question.OptionD</span>
+                            </label>
+                        </div>
+
+                        <!-- Confirmation Modals -->
+                        <input type="checkbox" id="confirm-edit-@question.Id" class="modal-toggle">
+                        <div class="modal">
+                            <div class="modal-content">
+                                <h3>Edit Feature</h3>
+                                <p>UPCOMING</p>
+                                <div class="modal-actions">
+                                    <label for="confirm-edit-@question.Id" class="btn-primary">Close</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="checkbox" id="confirm-regenerate-@question.Id" class="modal-toggle">
+                        <div class="modal">
+                            <div class="modal-content">
+                                <h3>Regenerate Feature</h3>
+                                <p>UPCOMING</p>
+                                <div class="modal-actions">
+                                    <label for="confirm-regenerate-@question.Id" class="btn-primary">Close</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="checkbox" id="confirm-delete-@question.Id" class="modal-toggle">
+                        <div class="modal">
+                            <div class="modal-content">
+                                <h3>Confirm Delete</h3>
+                                <p>Are you sure you want to delete this question?</p>
+                                <div class="modal-actions">
+                                    <label for="confirm-delete-@question.Id" class="btn-secondary">Cancel</label>
+                                    <form asp-action="DeleteQuestion" asp-controller="Logic" method="post">
+                                        <input type="hidden" name="id" value="@question.Id" />
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-primary">Confirm</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    questionNumber++;
+                }
+            }
+            else
+            {
+                <p>لا توجد أسئلة متاحة.</p>
+            }
+        </main>
+
+        <!-- Save Modal -->
+        <input type="checkbox" id="save-modal" class="modal-toggle">
+        <div class="modal">
+            <div class="modal-content">
+                <h3>Exam Link</h3>
+                <div class="link-container">
+                    <input type="text" value="@Url.Action("TakeExam", "Logic", new { jobRequestId = ViewBag.JobRequestId }, "https")" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <div class="modal-actions">
+                    <label for="save-modal" class="btn-primary">Close</label>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <script>
+        function copyToClipboard() {
+            var link = document.querySelector('.link-container input');
+            link.select();
+            document.execCommand('copy');
+            alert('Link copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

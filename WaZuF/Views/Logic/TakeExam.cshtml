@@ -1,0 +1,66 @@
+﻿@model List<WaZuF.Models.Question>
+
+@{
+    ViewData["Title"] = "Take Exam";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Take Exam</title>
+    <link rel="stylesheet" href="~/css/Exam.css">
+    <style>
+        .question-card {
+            margin-bottom: 20px; /* إضافة مسافة سفلية بين الأسئلة */
+            padding: 15px; /* إضافة حشوة داخلية لكل سؤال */
+            border: 1px solid #ddd; /* إضافة حدود لتوضيح الفصل */
+            border-radius: 5px; /* زوايا دائرية اختيارية */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Take Exam</h2>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <form asp-action="TakeExam" asp-controller="Logic" method="post">
+                @Html.AntiForgeryToken()
+                @{
+                    int questionNumber = 1;
+                    foreach (var question in Model)
+                    {
+                        <div class="question-card">
+                            <h4>Question @questionNumber: @question.Text</h4>
+                            <div class="choices">
+                                <label class="choice">
+                                    <input type="radio" name="answers[@question.Id]" value="a" required>
+                                    <span class="choice-text">@question.OptionA</span>
+                                </label>
+                                <label class="choice">
+                                    <input type="radio" name="answers[@question.Id]" value="b">
+                                    <span class="choice-text">@question.OptionB</span>
+                                </label>
+                                <label class="choice">
+                                    <input type="radio" name="answers[@question.Id]" value="c">
+                                    <span class="choice-text">@question.OptionC</span>
+                                </label>
+                                <label class="choice">
+                                    <input type="radio" name="answers[@question.Id]" value="d">
+                                    <span class="choice-text">@question.OptionD</span>
+                                </label>
+                            </div>
+                        </div>
+                        questionNumber++;
+                    }
+                }
+                <button type="submit" class="btn btn-primary">Submit Exam</button>
+            </form>
+        }
+        else
+        {
+            <p>No questions available for this exam.</p>
+        }
+    </div>
+</body>
+</html>
