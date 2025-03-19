@@ -12,7 +12,7 @@ namespace WaZuF.Models
         public string ? CompanyName { get; set; }
         public string? RegistrationNumber { get; set; }
         public List<JobRequest> JobRequests { get; set; } = new();
-        public List<CodeQuiz> CodeQuiz { get; set; } = new();
+        public List<Exam> Exams { get; set; } = new();
     }
 
 }

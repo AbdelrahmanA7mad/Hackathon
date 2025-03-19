@@ -1,48 +1,61 @@
+@using Microsoft.AspNetCore.Identity
 @{
-    ViewData["Title"] = "Professional Match";
+    ViewData["Title"] = "AppUser Portal";
 }
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
 <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-<div class="landing-page">
-    <div class="container">
+<div class="AppUser-landing">
+    <nav class="navbar">
+        <a asp-controller="Home" asp-action="Index" class="logo">TalentMatch</a>
+        <div class="auth-buttons">
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                <a id="register" asp-area="Identity" class="cta-button" asp-page="/Account/Register">Sign Up</a>
+                <a id="login" asp-area="Identity" class="cta-button" asp-page="/Account/Login">Login</a>
+            }
+            else
+            {
+                <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    @Html.AntiForgeryToken()
+                    <button id="logout" type="submit" class="cta-button">Logout</button>
+                </form>
+
+                @if (User.HasClaim("UserType", "Company"))
+                {
+                    <a asp-controller="Main" class="cta-button" asp-action="Dashboard">Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Employee" class="cta-button" asp-action="Index">Dashboard</a>
+
+                }
+
+
+            }
+        </div>
+    </nav>
+
+    <div class="main-content fade-in">
         <div class="hero-section">
-            <h1>Find Your Perfect Match in the <span class="highlight">Professional World</span></h1>
-            <p class="subtitle">Connect with top companies and talented professionals using our AI-powered recruitment platform</p>
+            <h1>Find Your Perfect Candidates</h1>
+            <p>TalentMatch helps you streamline your recruitment process with customized assessments and intelligent candidate matching.</p>
         </div>
 
-        <div class="cards-container">
-            <a asp-controller="Home" asp-action="Company" class="card company-card">
-                <div class="icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-                        <path d="M9 22v-4h6v4"></path>
-                    </svg>
-                </div>
-                <h2>For Companies</h2>
-                <p>Find the best talent using our advanced AI matching algorithm</p>
-                <div class="cta">
-                    Get Started
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </a>
-
-            <a asp-area="Identity" t class="card employee-card" asp-page="/Account/Login">
-                <div class="icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                    </svg>
-                </div>
-                <h2>For Employees</h2>
-                <p>Let AI help you find the perfect job match based on your skills and preferences</p>
-                <div class="cta">
-                    Coming Soon
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </a>
+        <div class="features">
+            <div class="feature-card">
+                <h3>Custom Assessments</h3>
+                <p>Create tailored assessments for any role with our intuitive assessment builder.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Smart Matching</h3>
+                <p>Our AI-powered system helps you identify the best candidates based on their assessment results.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Detailed Analytics</h3>
+                <p>Get comprehensive insights into candidate performance and make data-driven decisions.</p>
+            </div>
         </div>
     </div>
 </div>

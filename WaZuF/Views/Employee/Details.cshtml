@@ -1,0 +1,52 @@
+﻿@model ExamDetailsViewModel
+<link href="~/css/history.css" rel="stylesheet" />
+
+    <div class="page">
+        <div class="container">
+            <div class="problem-details-header">
+                <h1>Problem Details</h1>
+
+            <a asp-action="History" id="backToHistory" class="nav-button text-decoration-none">
+                    <i class="fas fa-arrow-left"></i> Back to History
+            </a>
+            </div>
+            <div class="problem-details-content" id="problemDetails">
+
+                <div class="problem-details-stats">
+                    <div class="stat-card">
+                        <h4>Total Attempts</h4>
+                        <p>@Model.Attempts</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Success Rate</h4>
+                        <p>@Model.Success_Rate%</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Status</h4> 
+                        @if (Model.Status)
+                        {
+                            <p>Solved</p>
+                        }else{
+                            <p>Unsolved</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="problem-statement">
+                    <h3>Problem Statement</h3>
+                    @Model.question
+                </div>
+                <div class="attempts-list">
+                    <h3>Solution</h3>
+
+                    <div class="attempt-item">  
+                        <div class="attempt-header">
+                          
+                        </div>
+                        <pre class="attempt-code">@Model.solution</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    

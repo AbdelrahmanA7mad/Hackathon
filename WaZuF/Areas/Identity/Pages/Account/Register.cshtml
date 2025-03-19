@@ -36,12 +36,10 @@
                     <div class="form-group">
                         <label asp-for="Input.FirstName"></label>
                         <input asp-for="Input.FirstName" class="form-control" />
-                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Input.LastName"></label>
                         <input asp-for="Input.LastName" class="form-control" />
-                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -49,13 +47,11 @@
                 <div class="form-section company-form">
                     <div class="form-group">
                         <label asp-for="Input.CompanyName"></label>
-                        <input asp-for="Input.CompanyName" value="s" class="form-control" />
-                        <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
+                        <input asp-for="Input.CompanyName" value="" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label asp-for="Input.RegistrationNumber"></label>
-                        <input asp-for="Input.RegistrationNumber" value="1" class="form-control" />
-                        <span asp-validation-for="Input.RegistrationNumber" class="text-danger"></span>
+                        <input asp-for="Input.RegistrationNumber" value="" class="form-control" />
                     </div>
                 </div>
 
@@ -63,17 +59,14 @@
                 <div class="form-group">
                     <label asp-for="Input.Email"></label>
                     <input asp-for="Input.Email" class="form-control" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.Password"></label>
                     <input asp-for="Input.Password" class="form-control" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.ConfirmPassword"></label>
                     <input asp-for="Input.ConfirmPassword" class="form-control" />
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
 
                 <button id="registerSubmit" type="submit" class="submit-button">Create Account</button>
@@ -87,7 +80,6 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const typeButtons = document.querySelectorAll('.type-button');
@@ -101,21 +93,13 @@
                     btn.classList.toggle('active', btn.dataset.type === userType);
                 });
 
-                // Toggle form sections and required attributes
+                // Toggle form sections without setting required attributes
                 if (userType === 'Person') {
                     personForm.classList.add('active');
                     companyForm.classList.remove('active');
-                    // Set Person fields as required
-                    personForm.querySelectorAll('input').forEach(input => input.required = true);
-                    // Remove required from Company fields
-                    companyForm.querySelectorAll('input').forEach(input => input.required = false);
                 } else {
                     companyForm.classList.add('active');
                     personForm.classList.remove('active');
-                    // Set Company fields as required
-                    companyForm.querySelectorAll('input').forEach(input => input.required = true);
-                    // Remove required from Person fields
-                    personForm.querySelectorAll('input').forEach(input => input.required = false);
                 }
             }
 
@@ -131,4 +115,5 @@
             toggleForms(userTypeInput.value);
         });
     </script>
+
 }
