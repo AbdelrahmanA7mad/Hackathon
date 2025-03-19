@@ -213,7 +213,7 @@ namespace WaZuF.Controllers
             await _db.SaveChangesAsync();
 
             TempData["Success"] = "تم حفظ رابط الامتحان بنجاح.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "JobRequest");
         }
     }
 }

@@ -1,10 +1,30 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
 @model AccessDeniedModel
 @{
-    ViewData["Title"] = "Access denied";
+    ViewData["Title"] = "Access Denied";
 }
+<link href="~/css/accessdenied.css" rel="stylesheet" />
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
-</header>
+<div class="container">
+    <div class="error-box">
+        <div class="lock-icon">
+            <div class="lock-body"></div>
+            <div class="lock-hole"></div>
+        </div>
+        <h1>Access Denied</h1>
+        @if (User.HasClaim("UserType", "Company"))
+        {
+            <p>Sorry, you don't have permission to access this page.</p>
+            <p>Your Account is Company, not an Employee.</p>
+        }
+        else
+        {
+            <p>Sorry, you don't have permission to access this page.</p>
+            <p>Your Account is Employee, not a Company.</p>
+        }
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/Identity/Account/Login">
+            <button id="logout" type="submit" class="back-button">Go Back</button>
+        </form>
+    </div>
+</div>
