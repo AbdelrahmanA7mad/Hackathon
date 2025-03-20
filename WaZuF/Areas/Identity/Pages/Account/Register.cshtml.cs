@@ -93,7 +93,7 @@ public class RegisterModel : PageModel
         // Set return URLs based on user type
         returnUrl ??= Input.UserType == "Company"
             ? Url.Action("Dashboard", "Main")
-            : Url.Action("Index", "Employee");
+            : Url.Action("Main", "Employee");
 
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 

@@ -1,0 +1,57 @@
+﻿@model List<jobViewModel>
+
+<link href="~/css/mainemp.css" rel="stylesheet" />
+
+<div class="AppUser-landing">
+    <nav class="navbar fixed-top">
+        <a asp-controller="Home" asp-action="Index" class="logo">TalentMatch</a>
+        <div class="auth-buttons">
+            <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                @Html.AntiForgeryToken()
+                <button id="logout" type="submit" class="cta-button">Logout</button>
+            </form>
+
+            <a asp-action="Index" id="viewHistory" class="cta-button">
+                    Train On Another Jop
+                    </a>
+            <a asp-action="Profile" id="viewHistory" class="cta-button">
+               My Profile
+            </a>
+        </div>
+    </nav>
+    </div>
+<main class="main-content">
+    <div id="job-listings">
+        @foreach (var job in Model)
+        {
+            <div class="job-card">
+                <div class="job-header">
+                    <div>
+                        <h2 class="job-title">@job.JobTitle</h2>
+                        <p class="company-name"> Company Name : @job.Company</p>
+                    </div>
+                    <div class="job-salary">4000 $</div>
+
+                </div>
+
+                <div class="job-meta">
+                    <span>📍 @job.Location</span>
+                    <span>💼 @job.Type</span>
+                    <span>📅 Posted: @job.Posted.ToString("MMMM dd, yyyy")</span>
+                </div>
+
+                <p class="job-description">@job.Description</p>
+
+                <div class="job-actions">
+                    @if (!string.IsNullOrEmpty(job.ExamLink))
+                    {
+                        <a href="@job.ExamLink" class="btn btn-primary" target="_blank">Take Exam</a>
+                    }
+                    <a asp-controller="Employee" asp-action="Index" asp-route-jobDescription="@job.Description" class="btn btn-secondary">
+                        Train On This Job
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</main>

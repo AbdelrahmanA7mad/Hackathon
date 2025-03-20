@@ -1,7 +1,13 @@
 ﻿@model EmployeeViewModel
 <link href="~/css/empcss.css" rel="stylesheet" />
+<div class="text-center">
 
+    <a asp-action="Main" id="backToHistory" class="nav-button text-decoration-none">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
 <div class="container">
+
     <div class="challenge-section">
         <h1>:           Coding Train Generator            : </h1>
        
@@ -82,7 +88,14 @@
     document.addEventListener("DOMContentLoaded", function () {
         const generateBtn = document.getElementById("generateChallenge");
         const submitSolutionBtn = document.getElementById("submitSolution");
-        const jobDescriptionInput = document.getElementById("jobDescription");
+        const jobDescriptionInput = document.getElementById("jobDescription"); // Added this line
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobDescriptionFromUrl = urlParams.get('jobDescription');
+
+        if (jobDescriptionFromUrl) {
+            jobDescriptionInput.value = jobDescriptionFromUrl;
+        }
+
         const jobDescriptionSection = document.getElementById("jobDescriptionSection");
         const problemStatementDiv = document.getElementById("problemStatement");
         const loadingOverlay = document.getElementById('loadingOverlay');
@@ -101,23 +114,19 @@
         function hideLoading() {
             loadingOverlay.classList.add('hidden');
         }
+
         function resetForNewChallenge() {
             solutionInput.value = '';
             continueSection.classList.remove('hidden'); // Show continue/finish buttons
             jobDescriptionSection.classList.add('hidden');
-            document.getElementById('challengeSection').classList.add('hidden');
-            document.getElementById('nav-menu').classList.add('hidden');
+            challengeSection.classList.add('hidden');
         }
 
         function resetFor_NewChallenge() {
             solutionInput.value = '';
-            continueSection.classList.add('hidden'); // Show continue/finish buttons
-            document.getElementById('challengeSection').classList.remove('hidden');
-            document.getElementById('nav-menu').classList.remove('hidden');
+            continueSection.classList.add('hidden');
+            challengeSection.classList.remove('hidden');
         }
-
-
- 
 
         function generateNewChallenge() {
             showLoading();
@@ -194,7 +203,7 @@
 
         continueBtn.addEventListener("click", function () {
             generateNewChallenge();
-            resetFor_NewChallenge
+            resetFor_NewChallenge();
         });
 
         finishBtn.addEventListener("click", function () {

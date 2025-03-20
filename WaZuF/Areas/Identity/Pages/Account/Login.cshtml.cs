@@ -90,7 +90,7 @@ namespace WaZuF.Areas.Identity.Pages.Account
             }
             else
             {
-                returnUrl ??= Url.Action("Index", "Employee");
+                returnUrl ??= Url.Action("Main", "Employee");
 
 
             }

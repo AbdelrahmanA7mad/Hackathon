@@ -33,7 +33,11 @@ namespace WaZuF.Models
 
         [ForeignKey("CompanyId")]
         public AppUser AppUser { get; set; } = null!;
-        [StringLength(500)] 
+        [StringLength(500)]
+
+        public string ? Location { get; set; } = "Not specified"; // Default if no location is provided
+        public string ?Type { get; set; } = "Full-time"; // Default Job Type
+        public DateTime ? Posted { get; set; } = DateTime.Now; // Default Posted Date
 
         public string? ExamLink { get; set; }
         public List<Question> Questions { get; set; } = new();

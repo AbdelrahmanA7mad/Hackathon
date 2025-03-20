@@ -1,26 +1,29 @@
-﻿@model WaZuF.ViewModels.ExamEntryViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@model WaZuF.ViewModels.ExamEntryViewModel
 
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
-    <title>Exam Entry</title>
-    <link rel="stylesheet" href="~/css/Exam.css" asp-append-version="true" />
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
+<title>Exam Entry</title>
+<link rel="stylesheet" href="~/css/Exam.css" asp-append-version="true" />
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
 
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
 
-        .text-danger {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
+    .text-danger {
+        color: red;
+        font-size: 0.9em;
+    }
+</style>
 <body>
     <div class="container">
         <h2>Please Enter Your Information</h2>
@@ -28,17 +31,35 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="JobRequestId" />
 
-            <div class="form-group">
-                <label asp-for="Name">Name</label>
-                <input asp-for="Name" class="form-control" required />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                var currentUser = await UserManager.GetUserAsync(User);
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" required value="@currentUser?.FirstName" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Email">Email</label>
-                <input asp-for="Email" class="form-control" type="email" required />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" type="email" required value="@currentUser?.Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" required />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" type="email" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            }
 
             <div class="text-danger">
                 @Html.ValidationSummary(true)
@@ -48,9 +69,7 @@
         </form>
     </div>
 
-
     @section Scripts {
         <partial name="_ValidationScriptsPartial" />
     }
 </body>
-</html>

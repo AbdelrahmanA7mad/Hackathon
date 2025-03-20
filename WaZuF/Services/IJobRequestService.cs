@@ -14,6 +14,7 @@ namespace WaZuF.Services
         Task UpdateJobRequestAsync(JobRequest jobRequest);
         Task DeleteJobRequestAsync(int id);
         Task<int> GetTotalJobsAsync(string companyId);
+        Task<int> GetTotalempsAsync(string companyId);
         Task<List<JobRequest>> GetJobRequestsByCompanyIdAsync(string companyId);
         Task<List<JobRequest>> GetLatestJobRequestsAsync(string companyId, int count = 5);
         Task<bool> DeleteJobRequestAsync(int jobId, string companyId);

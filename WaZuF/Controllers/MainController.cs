@@ -23,28 +23,26 @@ namespace WaZuF.Controllers
         [Authorize]
         public async Task<IActionResult> Dashboard()
         {
-
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            var totalJobs = await _jobRequestService.GetTotalJobsAsync(user.Id);
+            // Retrieve all job requests for the company
+            var jobRequests = await _jobRequestService.GetJobRequestsByCompanyIdAsync(user.Id);
+
+            // Count jobs and employees
+            var totalJobs = jobRequests.Count;
+            var totalEmp = await _jobRequestService.GetTotalempsAsync(user.Id);
+
+            // Get latest job requests
             var latestJobs = await _jobRequestService.GetLatestJobRequestsAsync(user.Id, 5);
 
-
+            // Pass data to the view
             ViewBag.TotalJobs = totalJobs;
+            ViewBag.TotalEmp = totalEmp;
             ViewBag.LatestJobs = latestJobs;
 
             return View();
         }
 
-        public IActionResult Myjobs()
-        {
-            return View();
-        }
-
-        public IActionResult Creatjob()
-        {
-            return View();
-        }
     }
 }
