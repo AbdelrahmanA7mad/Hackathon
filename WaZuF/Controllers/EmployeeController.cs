@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WaZuF.Models;
 using WaZuF.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace WaZuF.Controllers
 {
@@ -14,18 +15,66 @@ namespace WaZuF.Controllers
     {
         private readonly IEmpService _empService;
         private readonly AppDbContext _db;
+        private readonly UserManager<AppUser> _userManager;
 
-        public EmployeeController(IEmpService empService , AppDbContext db)
+        public EmployeeController(IEmpService empService , AppDbContext db , UserManager<AppUser> userManager)
         {
             _empService = empService;
             _db = db;
+            _userManager = userManager;
         }
+
 
         public IActionResult Index()
         {
+
             return View();
         }
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
 
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            char f = user.FirstName[0];
+            char s = user.LastName[0];
+
+            var model = new ProfileViewModel
+            {
+                Name = $"{user.FirstName} {user.LastName}",
+                Email = user.Email,
+                firstChar=f,
+                SecondChar=s
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Main()
+        {
+            var jobs = _db.JobRequests
+           .Select(j => new jobViewModel
+           {
+               Id = j.Id,
+               JobTitle = j.JobTitle,
+               Description = j.Description,
+               RequiredSkills= j.RequiredSkills,
+               NumberOfQuestions = j.NumberOfQuestions,
+               DifficultyLevel = j.DifficultyLevel.ToString(),
+               Company = j.AppUser.CompanyName,
+               ExamLink = j.ExamLink,
+               Location = "Cairo", 
+               Type = "Full-time", 
+               Posted = DateTime.Now 
+           })
+           .ToList();
+
+            return View(jobs);
+        }
         public async Task<IActionResult> History()
         {
             var examss = await _empService.GetAllExams(); // No need to pass viewModel

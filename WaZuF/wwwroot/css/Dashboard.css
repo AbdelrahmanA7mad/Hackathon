@@ -257,7 +257,7 @@ body {
 }
 
 .recent-jobs {
-    grid-column: span 8;
+    grid-column: span 12;
     background: var(--card-bg);
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);

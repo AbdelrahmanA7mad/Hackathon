@@ -1,0 +1,73 @@
+﻿@model ProfileViewModel
+<link href="~/css/mainemp.css" rel="stylesheet" />
+<link href="~/css/porfile.css" rel="stylesheet" />
+<main class="main-content">
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <span>@Model.firstChar@Model.SecondChar</span>
+            </div>
+            <div class="profile-info">
+                <h1>@Model.Name</h1>
+                <p>Senior Frontend Developer</p>
+                <div class="profile-meta">
+                    <span>📍 San Francisco, CA</span>
+                    <span>💼 Open to Work</span>
+                    <span>⚡ 5 Years Experience</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">React</span>
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">HTML5</span>
+                <span class="skill-tag">CSS3</span>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Experience</h2>
+            <div class="experience-item">
+                <h3>Senior Frontend Developer</h3>
+                <p class="company">TechCorp Solutions</p>
+                <p class="date">2020 - Present</p>
+                <p class="description">Led the frontend development team in building modern web applications using React and TypeScript.</p>
+            </div>
+            <div class="experience-item">
+                <h3>Frontend Developer</h3>
+                <p class="company">WebTech Inc</p>
+                <p class="date">2018 - 2020</p>
+                <p class="description">Developed responsive web applications and implemented new features using modern JavaScript.</p>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Training Progress</h2>
+            <div class="training-progress">
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span>React Advanced Concepts</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span>Node.js Backend</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 65%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

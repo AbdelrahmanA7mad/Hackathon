@@ -1,14 +1,7 @@
 @model CreateJopViewModel
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Dashboard</title>
     <link rel="stylesheet" href="~/css/Dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
 <body>
     <div id="app">
         <div class="dashboard">
@@ -16,16 +9,14 @@
                 <h1>Job Dashboard</h1>
                 <div class="header-actions">
                     <button class="btn btn-primary" id="createJobBtn">+ Add New Job</button>
-                    <form asp-controller="JobRequest" asp-action="Index" method="get">
-                        <button type="submit" class="btn btn-secondary">View All Jobs</button>
-                    </form>
+                    <a asp-controller="JobRequest" asp-action="Index" class="btn btn-secondary">View My Jobs</a>
+
                     <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                         @Html.AntiForgeryToken()
                         <button id="logout" type="submit" class="btn btn-danger rounded-pill fw-semibold">Logout</button>
                     </form>
                 </div>
             </div>
-
             <div class="dashboard-grid">
                 <div class="stats-container">
                     <div class="stat-card">
@@ -34,13 +25,8 @@
                         <p>Across all departments</p>
                     </div>
                     <div class="stat-card">
-                        <h3>Active Jobs</h3>
-                        <div class="stat-number">@ViewBag.ActiveJobs</div>
-                        <p>Currently accepting applications</p>
-                    </div>
-                    <div class="stat-card">
                         <h3>Total Employees</h3>
-                        <div class="stat-number">@ViewBag.TotalEmployees</div>
+                        <div class="stat-number">@ViewBag.TotalEmp</div>
                         <p>Working on projects</p>
                     </div>
                 </div>
@@ -65,29 +51,6 @@
                         else
                         {
                             <p>No recent job requests found.</p>
-                        }
-                    </div>
-                </div>
-
-                <div class="employees-section">
-                    <h2>Team Members</h2>
-                    <div class="employees-list">
-                        @if (ViewBag.TeamMembers != null && ViewBag.TeamMembers.Count > 0)
-                        {
-                            foreach (var member in ViewBag.TeamMembers)
-                            {
-                                <div class="employee-card">
-                                    <div class="employee-avatar">@member.Avatar</div>
-                                    <div class="employee-info">
-                                        <h3>@member.Name</h3>
-                                        <p>@member.Role • @member.ProjectsCount Projects</p>
-                                    </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <p>No team members found.</p>
                         }
                     </div>
                 </div>

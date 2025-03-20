@@ -149,5 +149,18 @@ namespace WaZuF.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<int> GetTotalempsAsync(string companyId)
+        {
+            var jobRequests = await _context.JobRequests
+                .Where(j => j.CompanyId == companyId)
+                .Include(j => j.Employees)
+                .ToListAsync();
+
+            int totalEmployees = jobRequests.Sum(j => j.Employees.Count);
+
+            return totalEmployees;
+        }
+
+
     }
 }
