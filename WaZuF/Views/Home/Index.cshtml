@@ -8,7 +8,11 @@
 <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 <div class="AppUser-landing">
     <nav class="navbar">
-        <a asp-controller="Home" asp-action="Index" class="logo">TalentMatch</a>
+        <a asp-controller="Home" asp-action="Index" class="logo">
+            <img src="~/css/icon.svg" alt="TalentMatch Logo" width="50" height="50" />
+            <span class="logo-text">Talent Match</span>
+        </a>
+
         <div class="auth-buttons">
             @if (!SignInManager.IsSignedIn(User))
             {

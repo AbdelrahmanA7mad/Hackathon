@@ -79,64 +79,6 @@
         </div>
     </div>
 
-    <style>
-        /* Existing styles... */
-
-        .custom-alert-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-            .custom-alert-modal.active {
-                display: flex;
-            }
-
-        .alert-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            transform: scale(0.8);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .custom-alert-modal.active .alert-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .alert-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .close-alert {
-            cursor: pointer;
-            font-size: 24px;
-            line-height: 1;
-        }
-
-        .alert-footer {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-    </style>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Show/Hide description functionality
